@@ -1,22 +1,22 @@
 package github
 
 import (
-	"context"
 	"fmt"
 	"log"
 
 	"github.com/zdrgeo/osmium/internal/analysis"
 
-	"github.com/shurcooL/githubv4"
+	"github.com/cli/go-gh/v2/pkg/api"
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type PullRequestAnalysisSource struct {
-	client          *githubv4.Client
+	client          *api.GraphQLClient
 	repositoryOwner string
 	repositoryName  string
 }
 
-func NewPullRequestAnalysisSource(client *githubv4.Client, repositoryOwner, repositoryName string) *PullRequestAnalysisSource {
+func NewPullRequestAnalysisSource(client *api.GraphQLClient, repositoryOwner, repositoryName string) *PullRequestAnalysisSource {
 	return &PullRequestAnalysisSource{client: client, repositoryOwner: repositoryOwner, repositoryName: repositoryName}
 }
 
@@ -50,17 +50,17 @@ func (source *PullRequestAnalysisSource) Query() *analysis.Analysis {
 				Nodes    []PullRequest
 				PageInfo PageInfo
 			} `graphql:"pullRequests(last: 100, before: $startCursor)"`
-		} `graphql:"repository(owner: $repositoryOwner, name: $repositoryName)"`
+		} `graphql:"repository(owner: $owner, name: $name)"`
 	}
 
 	variables := map[string]any{
-		"repositoryOwner": githubv4.String(source.repositoryOwner),
-		"repositoryName":  githubv4.String(source.repositoryName),
-		"startCursor":     githubv4.String(""),
-		"endCursor":       githubv4.String(""),
+		"owner":       graphql.String(source.repositoryOwner),
+		"name":        graphql.String(source.repositoryName),
+		"startCursor": graphql.String(""),
+		"endCursor":   graphql.String(""),
 	}
 
-	err := source.client.Query(context.Background(), &query, variables)
+	err := source.client.Query("", &query, variables)
 
 	if err != nil {
 		log.Fatal(err)

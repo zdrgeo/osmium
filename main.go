@@ -4,17 +4,15 @@ Copyright © 2024 Zdravko Georgiev <zdravko.georgiev@gmail.com>
 package main
 
 import (
-	"context"
 	"log"
 
-	"github.com/shurcooL/githubv4"
+	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/spf13/viper"
 	"github.com/zdrgeo/osmium/cmd"
 	"github.com/zdrgeo/osmium/internal/analysis"
 	"github.com/zdrgeo/osmium/internal/repository"
 	"github.com/zdrgeo/osmium/internal/source/github"
 	"github.com/zdrgeo/osmium/internal/view"
-	"golang.org/x/oauth2"
 )
 
 func main() {
@@ -29,15 +27,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tokenSource := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: viper.GetString("GITHUB_TOKEN")},
-	)
+	// client, err := api.DefaultGraphQLClient()
+	options := api.ClientOptions{AuthToken: viper.GetString("GITHUB_TOKEN")}
+	client, err := api.NewGraphQLClient(options)
 
-	httpClient := oauth2.NewClient(context.Background(), tokenSource)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	gitHubClient := githubv4.NewClient(httpClient)
-
-	analysisSource := github.NewPullRequestAnalysisSource(gitHubClient, "scaleforce", "tixets")
+	analysisSource := github.NewPullRequestAnalysisSource(client, "scaleforce", "tixets")
 
 	analysisRepository := repository.NewFileAnalysisRepository("") // Empty means user home
 	viewRepository := repository.NewFileViewRepository("")         // Empty means user home
