@@ -25,11 +25,17 @@ func NewRenderViewCommand(handler *view.RenderViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving name: %s\n", err.Error())
 			}
 
-			handler.RenderView(analysisName, name)
+			spanName, err := cmd.Flags().GetString("span-name")
+
+			if err != nil {
+				fmt.Printf("Error retrieving span name: %s\n", err.Error())
+			}
+
+			handler.RenderView(analysisName, name, spanName)
 		},
 	}
 
-	command.Flags().StringArray("node-name", []string{}, "Names of the nodes")
+	command.Flags().String("span-name", "", "Name of the span")
 
 	return command
 }

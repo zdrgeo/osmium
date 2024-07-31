@@ -18,10 +18,10 @@ func NewRenderViewHandler(repository ViewRepository) *RenderViewHandler {
 	return &RenderViewHandler{repository: repository}
 }
 
-func (handler *RenderViewHandler) RenderView(analysisName, name string) {
+func (handler *RenderViewHandler) RenderView(analysisName, name, spanName string) {
 	view := handler.repository.Get(analysisName, name)
 
-	renderViewToTerminal(view, "")
+	renderViewToTerminal(view, spanName)
 }
 
 var valueColors = map[int]int{
@@ -68,9 +68,9 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 			if nodeIndex != edgeNodeIndex {
 				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[nodeIndex][edgeNodeIndex]), spanView.Values[nodeIndex][edgeNodeIndex])
 			} else {
-				fmt.Printf("%2d ", spanView.Values[nodeIndex][edgeNodeIndex])
+				// fmt.Printf("%2d ", spanView.Values[nodeIndex][edgeNodeIndex])
 				// fmt.Printf("\033[7m%2d\033[0m ", spanView.Values[nodeIndex][edgeNodeIndex])
-				// fmt.Print("▒▒ ")
+				fmt.Print("▒▒ ")
 			}
 		}
 		fmt.Printf("%2d %s\n", nodeIndex, nodeName)
