@@ -7,7 +7,13 @@ This is a prototype tool for exploring the dependencies between elements in a so
 Osmium uses the DSM ([Design Structure Matrix](https://en.wikipedia.org/wiki/Design_structure_matrix)) methods to measure and visualize the cohession between files in a GitHub repository by tracking how often the files have been changed together in a logical units like Git commits or GitHub Pull Requests.
 It is implemented as a CLI application with commands for generating analyses and building different views (presentations) on them.
 
+![Analysis View](./analysisview.png)
+
 ## Concepts
+
+- Analysis
+- View
+- Span
 
 ## Usage
 
