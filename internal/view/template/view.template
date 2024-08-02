@@ -84,19 +84,19 @@
 
             svg.append("g")
                 .attr("transform", `translate(30, 20)`)
-                .call(d3.axisTop(x).ticks(nodeNames.length));
+                .call(d3.axisTop(x).ticks(nodeNames.length).tickSize(0));
 
             svg.append("g")
                 .attr("transform", `translate(30, ${nodeNames.length * cellWidth + 20})`)
-                .call(d3.axisBottom(x).ticks(nodeNames.length));
+                .call(d3.axisBottom(x).ticks(nodeNames.length).tickSize(0));
 
             svg.append("g")
                 .attr("transform", `translate(20, 30)`)
-                .call(d3.axisLeft(y).ticks(nodeNames.length));
+                .call(d3.axisLeft(y).ticks(nodeNames.length).tickSize(0));
 
             svg.append("g")
                 .attr("transform", `translate(${nodeNames.length * cellHeight + 20}, 30)`)
-                .call(d3.axisRight(y).ticks(nodeNames.length));
+                .call(d3.axisRight(y).ticks(nodeNames.length).tickSize(0));
 
             const packNodes = svg
                 .selectAll('.pack')
