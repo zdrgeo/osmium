@@ -27,8 +27,8 @@ func NewFileViewRepository(basePath string) *FileViewRepository {
 	return &FileViewRepository{basePath: basePath}
 }
 
-func viewPath(basePath, analysisName, viewName string) string {
-	return filepath.Join(basePath, "osmium", "analysis", analysisName, "view", viewName)
+func viewPath(basePath, analysisName, name string) string {
+	return filepath.Join(basePath, "osmium", "analysis", analysisName, "view", name)
 }
 
 func (repository *FileViewRepository) Add(analysisName, name string, view *view.AnalysisView) {
