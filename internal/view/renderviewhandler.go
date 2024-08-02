@@ -2,16 +2,19 @@ package view
 
 import (
 	"fmt"
+	"html/template"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/png"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 type RenderViewHandler struct {
 	repository ViewRepository
+	basePath   string
 }
 
 func NewRenderViewHandler(repository ViewRepository) *RenderViewHandler {
@@ -21,7 +24,32 @@ func NewRenderViewHandler(repository ViewRepository) *RenderViewHandler {
 func (handler *RenderViewHandler) RenderView(analysisName, name, spanName string) {
 	view := handler.repository.Get(analysisName, name)
 
-	renderViewToTerminal(view, spanName)
+	basePath := handler.basePath
+
+	if basePath == "" {
+		userHomePath, err := os.UserHomeDir()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		basePath = userHomePath
+	}
+
+	viewPath := viewPath(basePath, analysisName, name)
+
+	if err := os.MkdirAll(viewPath, 0750); err != nil {
+		log.Fatal(err)
+	}
+
+	filePath := filepath.Join(viewPath, "view.html")
+
+	// renderViewToTerminal(view, spanName)
+	renderViewToHTMLFile(view, spanName, "internal/view/template/view.template", filePath)
+}
+
+func viewPath(basePath, analysisName, name string) string {
+	return filepath.Join(basePath, "osmium", "analysis", analysisName, "view", name)
 }
 
 var valueColors = map[int]int{
@@ -88,7 +116,7 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 	fmt.Print("\n")
 }
 
-func renderViewToCSVFile(view *AnalysisView, fileName string) {
+func renderViewToCSVFile(view *AnalysisView, spanName, fileName string) {
 	file, err := os.Create(fileName)
 
 	if err != nil {
@@ -138,4 +166,34 @@ func renderViewToPNGFile(view *AnalysisView, spanName, fileName string) {
 	}
 	defer myfile.Close()
 	png.Encode(myfile, myimage) // output file /tmp/two_rectangles.png
+}
+
+func renderViewToHTMLFile(view *AnalysisView, spanName, templateFileName, fileName string) {
+	file, err := os.Create(fileName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer file.Close()
+
+	funcMap := template.FuncMap{
+		"inc": func(i int) int { return i + 1 },
+		"dec": func(i int) int { return i - 1 },
+	}
+
+	_ = funcMap
+
+	// template, err := template.New(filepath.Base(templateFileName)).Funcs(funcMap).ParseFiles(templateFileName)
+	template, err := template.New(filepath.Base(templateFileName)).ParseFiles(templateFileName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = template.Execute(file, view)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }

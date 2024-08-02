@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>View</title>
+</head>
+<body>
+    <div><strong>Analysis:</strong> {{ .Name }}</div>
+    <div class="view" style="margin: 20px; padding: 20px; border: 1px solid black; width: max-content; height: max-content;"></div>
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+        const nodeNames = [{{ range .NodeNames }}'{{ . }}',{{ end }}];
+
+        const cellWidth = 20;
+        const cellHeight = 20;
+
+        const generateCells =
+            (xL, yL) => new Array(yL).fill(null).map(
+                (y, yI) => new Array(xL).fill(null).map(
+                    (x, xI) => ({
+                        i: yI * yL + xI,
+                        x: xI * cellWidth,
+                        y: yI * cellHeight,
+                        width: cellWidth,
+                        height: cellHeight,
+                        color: xI == yI ? 'lightgray' : 'white',
+                        value: null
+                    })
+                )
+            );
+
+        const renderCell = (g, color, value) => {
+            g.append('rect')
+                .style('stroke', '#222')
+                .attr('fill', color)
+                .attr('rx', 0)
+                .attr('ry', 0)
+                .attr('width', cellWidth)
+                .attr('height', cellHeight);
+
+            g.append('text')
+                .text(value)
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 8)
+                .attr('text-anchor', 'middle')
+                .attr('x', cellWidth / 2)
+                .attr('y', 16)
+                .attr('width', cellWidth)
+                .attr('height', cellHeight);
+
+            return g;
+        };
+
+        const render = (cells, values) => {
+            for (let yI = 0; yI < values.length; yI++) {
+                for (let xI = 0; xI < values[yI].length; xI++) {
+                    if (xI != yI) {
+                        cells[yI][xI].color = values[yI][xI].color;
+                        cells[yI][xI].value = values[yI][xI].value;
+                    }
+                }
+            }
+
+            const x = d3
+                .scaleLinear()
+                .domain([0, nodeNames.length - 1])
+                .range([0, (nodeNames.length - 1) * cellWidth]);
+
+            const y = d3
+                .scaleLinear()
+                .domain([0, nodeNames.length - 1])
+                .range([0, (nodeNames.length - 1) * cellHeight]);
+
+            d3
+                .select('.view > svg')
+                .remove();
+
+            const svg = d3
+                .select('.view')
+                .append('svg')
+                    .attr("width", nodeNames.length * cellWidth + 40)
+                    .attr("height", nodeNames.length * cellHeight + 40);
+
+            svg.append("g")
+                .attr("transform", `translate(30, 20)`)
+                .call(d3.axisTop(x).ticks(nodeNames.length));
+
+            svg.append("g")
+                .attr("transform", `translate(30, ${nodeNames.length * cellWidth + 20})`)
+                .call(d3.axisBottom(x).ticks(nodeNames.length));
+
+            svg.append("g")
+                .attr("transform", `translate(20, 30)`)
+                .call(d3.axisLeft(y).ticks(nodeNames.length));
+
+            svg.append("g")
+                .attr("transform", `translate(${nodeNames.length * cellHeight + 20}, 30)`)
+                .call(d3.axisRight(y).ticks(nodeNames.length));
+
+            const packNodes = svg
+                .selectAll('.pack')
+                .data(cells)
+                .enter()
+                .append('g')
+                    .attr('class', 'pack')
+                    .attr('transform', c => `translate(20, 20)`);
+
+            const cellNodes = packNodes
+                .selectAll('.cell')
+                .data(c => c)
+                .enter()
+                .append('g')
+                    .attr('class', 'cell')
+                    .attr('transform', c => `translate(${c.x}, ${c.y})`)
+                    .each((c, i, nodes) => renderCell(d3.select(nodes[i]), c.color, c.value));
+        };
+
+        const applyValues = (values) => values;
+
+        const getRandom = (min, max) => {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        const generateValues =
+            (xL, yL) => new Array(yL).fill(null).map(
+                (y, yI) => new Array(xL).fill(null).map(
+                    (x, xI) => {
+                        const value = getRandom(0, 20);
+
+                        return ({
+                            i: yI * yL + xI,
+                            xI: xI,
+                            yI: yI,
+                            color: value >= 5 && value < 15 ? '#00afff' : '#d7afff',
+                            value: value
+                        });
+                    }
+                )
+            );
+
+        const cells = generateCells(nodeNames.length, nodeNames.length);
+        const values = generateValues(nodeNames.length, nodeNames.length);
+
+        render(cells, values);
+
+        // #00afff, #5fafff, #87afff, #afafff, #d7afff, #ffafff
+    </script>
+</body>
+</html>
