@@ -2,7 +2,6 @@ package github
 
 import (
 	"fmt"
-	// "iter"
 	"log"
 	"time"
 
@@ -23,13 +22,11 @@ func NewPullRequestAnalysisSource(client *api.GraphQLClient, repositoryOwner, re
 }
 
 func (source *PullRequestAnalysisSource) Query() *analysis.Analysis {
-	pullRequests, err := source.pullRequests()
+	pullRequests, err := source.getPullRequests()
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("Pull Requests count: %d\n", len(pullRequests))
 
 	modules := map[string]*analysis.Module{}
 	spans := map[string]*analysis.Span{}
@@ -37,13 +34,17 @@ func (source *PullRequestAnalysisSource) Query() *analysis.Analysis {
 	nodes := map[string]*analysis.Node{}
 
 	for _, pullRequest := range pullRequests {
-		files, err := source.files(pullRequest.ID)
+		var files []pullRequestChangedFile
 
-		if err != nil {
-			log.Fatal(err)
+		if !pullRequest.Files.PageInfo.HasNextPage {
+			files = pullRequest.Files.Nodes
+		} else {
+			files, err = source.getFiles(pullRequest.ID)
+
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
-
-		fmt.Printf("Pull Request %d files count: %d\n", pullRequest.Number, len(files))
 
 		changeName := fmt.Sprint(pullRequest.Number)
 
@@ -78,59 +79,57 @@ func (source *PullRequestAnalysisSource) Query() *analysis.Analysis {
 }
 
 type (
-	RateLimit struct {
+	rateLimit struct {
 		Cost      int
 		Remaining int
 		ResetAt   time.Time
 	}
 
-	PageInfo struct {
-		// StartCursor     string
-		EndCursor string
-		// HasPreviousPage bool
+	pageInfo struct {
+		EndCursor   string
 		HasNextPage bool
 	}
 
-	PullRequestChangedFile struct {
+	pullRequestChangedFile struct {
 		Path string
 	}
 
-	Files struct {
-		Nodes    []PullRequestChangedFile
-		PageInfo PageInfo
+	files struct {
+		Nodes    []pullRequestChangedFile
+		PageInfo pageInfo
 	}
 
-	PullRequest struct {
+	pullRequest struct {
 		ID     string
 		Number int
 		Title  string
 		URL    string
-		Files  Files `graphql:"files(first: 100)"`
+		Files  files `graphql:"files(first: 100)"`
 	}
 
-	PullRequests struct {
-		Nodes    []PullRequest
-		PageInfo PageInfo
+	pullRequests struct {
+		Nodes    []pullRequest
+		PageInfo pageInfo
 	}
 
-	Repository struct {
+	repository struct {
 		Name         string
-		PullRequests PullRequests `graphql:"pullRequests(first: 100, after: $pullRequestsCursor)"`
+		PullRequests pullRequests `graphql:"pullRequests(first: 100, after: $pullRequestsCursor)"`
 	}
 
-	PullRequestFragment struct {
-		Files Files `graphql:"files(first: 100, after: $filesCursor)"`
+	pullRequestFragment struct {
+		Files files `graphql:"files(first: 100, after: $filesCursor)"`
 	}
 
-	Node struct {
-		PullRequest PullRequestFragment `graphql:"... on PullRequest"`
+	node struct {
+		PullRequest pullRequestFragment `graphql:"... on PullRequest"`
 	}
 )
 
-func (source *PullRequestAnalysisSource) pullRequests() ([]PullRequest, error) {
+func (source *PullRequestAnalysisSource) getPullRequests() ([]pullRequest, error) {
 	var query struct {
-		RateLimit  RateLimit
-		Repository Repository `graphql:"repository(owner: $owner, name: $name)"`
+		RateLimit  rateLimit
+		Repository repository `graphql:"repository(owner: $owner, name: $name)"`
 	}
 
 	variables := map[string]any{
@@ -139,7 +138,7 @@ func (source *PullRequestAnalysisSource) pullRequests() ([]PullRequest, error) {
 		"pullRequestsCursor": graphql.String(""),
 	}
 
-	pullRequests := []PullRequest{}
+	pullRequests := []pullRequest{}
 
 	for {
 		if err := source.client.Query("", &query, variables); err != nil {
@@ -158,10 +157,10 @@ func (source *PullRequestAnalysisSource) pullRequests() ([]PullRequest, error) {
 	return pullRequests, nil
 }
 
-func (source *PullRequestAnalysisSource) files(pullRequestID string) ([]PullRequestChangedFile, error) {
+func (source *PullRequestAnalysisSource) getFiles(pullRequestID string) ([]pullRequestChangedFile, error) {
 	var query struct {
-		RateLimit RateLimit
-		Node      Node `graphql:"node(id: $id)"`
+		RateLimit rateLimit
+		Node      node `graphql:"node(id: $id)"`
 	}
 
 	variables := map[string]any{
@@ -169,7 +168,7 @@ func (source *PullRequestAnalysisSource) files(pullRequestID string) ([]PullRequ
 		"filesCursor": graphql.String(""),
 	}
 
-	files := []PullRequestChangedFile{}
+	files := []pullRequestChangedFile{}
 
 	for {
 		if err := source.client.Query("", &query, variables); err != nil {
@@ -187,81 +186,3 @@ func (source *PullRequestAnalysisSource) files(pullRequestID string) ([]PullRequ
 
 	return files, nil
 }
-
-/*
-func (source *PullRequestAnalysisSource) pullRequests() iter.Seq[PullRequest] {
-	var query struct {
-		RateLimit  RateLimit
-		Repository Repository `graphql:"repository(owner: $owner, name: $name)"`
-	}
-
-	variables := map[string]any{
-		"owner":              graphql.String(source.repositoryOwner),
-		"name":               graphql.String(source.repositoryName),
-		"pullRequestsCursor": graphql.String(""),
-	}
-
-	return func(yield func(PullRequest) bool) {
-		for {
-			if err := source.client.Query("", &query, variables); err != nil {
-				log.Fatal(err)
-			}
-
-			for _, pullRequest := range query.Repository.PullRequests.Nodes {
-				if !yield(pullRequest) {
-					return
-				}
-			}
-
-			if !query.Repository.PullRequests.PageInfo.HasNextPage {
-				break
-			}
-
-			variables["pullRequestsCursor"] = graphql.String(query.Repository.PullRequests.PageInfo.EndCursor)
-		}
-	}
-}
-
-func (source *PullRequestAnalysisSource) files(pullRequestID string) iter.Seq[PullRequestChangedFile] {
-	var query struct {
-		RateLimit RateLimit
-		Node      Node `graphql:"node(id: $id)"`
-	}
-
-	variables := map[string]any{
-		"id":          graphql.ID(pullRequestID),
-		"filesCursor": graphql.String(""),
-	}
-
-	return func(yield func(PullRequestChangedFile) bool) {
-		for {
-			if err := source.client.Query("", &query, variables); err != nil {
-				log.Fatal(err)
-			}
-
-			for _, file := range query.Node.PullRequest.Files.Nodes {
-				if !yield(file) {
-					return
-				}
-			}
-
-			if !query.Node.PullRequest.Files.PageInfo.HasNextPage {
-				break
-			}
-
-			variables["filesCursor"] = graphql.String(query.Node.PullRequest.Files.PageInfo.EndCursor)
-		}
-	}
-}
-*/
-
-/*
-actions := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-batchSize := 3
-batches := make([][]int, 0, (len(actions) + batchSize - 1) / batchSize)
-
-for batchSize < len(actions) {
-    actions, batches = actions[batchSize:], append(batches, actions[0:batchSize:batchSize])
-}
-batches = append(batches, actions)
-*/

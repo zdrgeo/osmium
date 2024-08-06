@@ -12,8 +12,8 @@ It is implemented as a CLI application with commands for generating analyses and
 ## Concepts
 
 - Analysis
-- View
 - Span
+- View
 
 ## Usage
 
