@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 Zdravko Georgiev <zdravko.georgiev@gmail.com>
-*/
 package main
 
 import (
@@ -8,7 +5,7 @@ import (
 
 	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/spf13/viper"
-	"github.com/zdrgeo/osmium/cmd"
+	"github.com/zdrgeo/osmium/cmd/cli/command"
 	"github.com/zdrgeo/osmium/internal/analysis"
 	"github.com/zdrgeo/osmium/internal/repository"
 	"github.com/zdrgeo/osmium/internal/source/github"
@@ -49,20 +46,20 @@ func main() {
 	deleteViewHandler := view.NewDeleteViewHandler(viewRepository)
 	renderViewHandler := view.NewRenderViewHandler(viewRepository)
 
-	createAnalysisCommand := cmd.NewCreateAnalysisCommand(createAnalysisHandler)
-	changeAnalysisCommand := cmd.NewChangeAnalysisCommand(changeAnalysisHandler)
-	deleteAnalysisCommand := cmd.NewDeleteAnalysisCommand(deleteAnalysisHandler)
+	createAnalysisCommand := command.NewCreateAnalysisCommand(createAnalysisHandler)
+	changeAnalysisCommand := command.NewChangeAnalysisCommand(changeAnalysisHandler)
+	deleteAnalysisCommand := command.NewDeleteAnalysisCommand(deleteAnalysisHandler)
 
-	analysisCommand := cmd.NewAnalysisCommand(createAnalysisCommand, changeAnalysisCommand, deleteAnalysisCommand)
+	analysisCommand := command.NewAnalysisCommand(createAnalysisCommand, changeAnalysisCommand, deleteAnalysisCommand)
 
-	createViewCommand := cmd.NewCreateViewCommand(createViewHandler)
-	changeViewCommand := cmd.NewChangeViewCommand(changeViewHandler)
-	deleteViewCommand := cmd.NewDeleteViewCommand(deleteViewHandler)
-	renderViewCommand := cmd.NewRenderViewCommand(renderViewHandler)
+	createViewCommand := command.NewCreateViewCommand(createViewHandler)
+	changeViewCommand := command.NewChangeViewCommand(changeViewHandler)
+	deleteViewCommand := command.NewDeleteViewCommand(deleteViewHandler)
+	renderViewCommand := command.NewRenderViewCommand(renderViewHandler)
 
-	viewCommand := cmd.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, renderViewCommand)
+	viewCommand := command.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, renderViewCommand)
 
-	osmiumCommand := cmd.NewOsmiumCommand(analysisCommand, viewCommand)
+	osmiumCommand := command.NewOsmiumCommand(analysisCommand, viewCommand)
 
 	if err := osmiumCommand.Execute(); err != nil {
 		log.Fatal(err)

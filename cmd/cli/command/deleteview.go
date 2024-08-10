@@ -1,4 +1,4 @@
-package cmd
+package command
 
 import (
 	"fmt"
@@ -7,11 +7,11 @@ import (
 	"github.com/zdrgeo/osmium/internal/view"
 )
 
-func NewRenderViewCommand(handler *view.RenderViewHandler) *cobra.Command {
+func NewDeleteViewCommand(handler *view.DeleteViewHandler) *cobra.Command {
 	command := &cobra.Command{
-		Use:   "render",
-		Short: "Render view",
-		Long:  `Render view.`,
+		Use:   "delete",
+		Short: "Delete view",
+		Long:  `Delete view.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			analysisName, err := cmd.Flags().GetString("analysis-name")
 
@@ -25,17 +25,9 @@ func NewRenderViewCommand(handler *view.RenderViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving name: %s\n", err.Error())
 			}
 
-			spanName, err := cmd.Flags().GetString("span-name")
-
-			if err != nil {
-				fmt.Printf("Error retrieving span name: %s\n", err.Error())
-			}
-
-			handler.RenderView(analysisName, name, spanName)
+			handler.DeleteView(analysisName, name)
 		},
 	}
-
-	command.Flags().String("span-name", "", "Name of the span")
 
 	return command
 }
