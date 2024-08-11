@@ -17,6 +17,17 @@ It is implemented as a CLI application with commands for generating analyses and
 
 ## Usage
 
+Configuration
+
+```
+# config.env
+
+SOURCE=github:pullrequest
+GITHUB_TOKEN=
+GITHUB_REPOSITORY_OWNER=
+GITHUB_REPOSITORY_NAME=
+```
+
 Commands to manipulate the DSM analyses
 
 ```
@@ -34,7 +45,9 @@ osmium view create --analysis-name="ticketing_tixets" --name="app" --node-name="
 
 osmium view change --analysis-name="ticketing_tixets" --name="app" --node-name="app/Controller/*.php" --node-name="app/Service/*.php" --node-name="app/Repository/*.php"
 
+osmium view delete --analysis-name="ticketing_tixets" --name="app"
+
 osmium view render --analysis-name="ticketing_tixets" --name="app"
 
-osmium view delete --analysis-name="ticketing_tixets" --name="app"
+osmium view listen --analysis-name="ticketing_tixets" --name="app"
 ```

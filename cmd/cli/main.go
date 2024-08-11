@@ -32,7 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	analysisSource := github.NewPullRequestAnalysisSource(client, "scaleforce", "tixets")
+	analysisSource := github.NewPullRequestAnalysisSource(client, viper.GetString("GITHUB_REPOSITORY_OWNER"), viper.GetString("GITHUB_REPOSITORY_NAME"))
 
 	analysisRepository := repository.NewFileAnalysisRepository("") // Empty means user home
 	viewRepository := repository.NewFileViewRepository("")         // Empty means user home
@@ -45,6 +45,7 @@ func main() {
 	changeViewHandler := view.NewChangeViewHandler(analysisRepository, viewRepository)
 	deleteViewHandler := view.NewDeleteViewHandler(viewRepository)
 	renderViewHandler := view.NewRenderViewHandler(viewRepository)
+	listenViewHandler := view.NewListenViewHandler()
 
 	createAnalysisCommand := command.NewCreateAnalysisCommand(createAnalysisHandler)
 	changeAnalysisCommand := command.NewChangeAnalysisCommand(changeAnalysisHandler)
@@ -56,8 +57,9 @@ func main() {
 	changeViewCommand := command.NewChangeViewCommand(changeViewHandler)
 	deleteViewCommand := command.NewDeleteViewCommand(deleteViewHandler)
 	renderViewCommand := command.NewRenderViewCommand(renderViewHandler)
+	listenViewCommand := command.NewListenViewCommand(listenViewHandler)
 
-	viewCommand := command.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, renderViewCommand)
+	viewCommand := command.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, renderViewCommand, listenViewCommand)
 
 	osmiumCommand := command.NewOsmiumCommand(analysisCommand, viewCommand)
 

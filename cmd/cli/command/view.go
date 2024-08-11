@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, renderViewCommand *cobra.Command) *cobra.Command {
+func NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, renderViewCommand, listenViewCommand *cobra.Command) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "view",
 		Short: "View",
@@ -23,6 +23,7 @@ func NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, ren
 	command.AddCommand(changeViewCommand)
 	command.AddCommand(deleteViewCommand)
 	command.AddCommand(renderViewCommand)
+	command.AddCommand(listenViewCommand)
 
 	return command
 }
