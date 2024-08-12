@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/zdrgeo/osmium/internal/view"
+	"github.com/zdrgeo/osmium/pkg/view"
 )
 
 func NewDeleteViewCommand(handler *view.DeleteViewHandler) *cobra.Command {

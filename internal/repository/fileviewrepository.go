@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/zdrgeo/osmium/internal/view"
+	"github.com/zdrgeo/osmium/pkg/view"
 )
 
 type FileViewRepository struct {

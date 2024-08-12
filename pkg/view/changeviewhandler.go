@@ -1,6 +1,6 @@
 package view
 
-import "github.com/zdrgeo/osmium/internal/analysis"
+import "github.com/zdrgeo/osmium/pkg/analysis"
 
 type ChangeViewHandler struct {
 	analysisRepository analysis.AnalysisRepository

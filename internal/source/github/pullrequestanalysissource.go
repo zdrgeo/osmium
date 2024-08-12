@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/zdrgeo/osmium/internal/analysis"
+	"github.com/zdrgeo/osmium/pkg/analysis"
 
 	"github.com/cli/go-gh/v2/pkg/api"
 	graphql "github.com/cli/shurcooL-graphql"

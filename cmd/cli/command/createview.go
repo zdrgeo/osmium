@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/zdrgeo/osmium/internal/view"
+	"github.com/zdrgeo/osmium/pkg/view"
 )
 
 func NewCreateViewCommand(handler *view.CreateViewHandler) *cobra.Command {

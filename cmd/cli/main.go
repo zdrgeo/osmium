@@ -6,10 +6,10 @@ import (
 	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/spf13/viper"
 	"github.com/zdrgeo/osmium/cmd/cli/command"
-	"github.com/zdrgeo/osmium/internal/analysis"
 	"github.com/zdrgeo/osmium/internal/repository"
 	"github.com/zdrgeo/osmium/internal/source/github"
-	"github.com/zdrgeo/osmium/internal/view"
+	"github.com/zdrgeo/osmium/pkg/analysis"
+	"github.com/zdrgeo/osmium/pkg/view"
 )
 
 func main() {

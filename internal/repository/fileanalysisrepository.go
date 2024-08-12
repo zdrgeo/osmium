@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/zdrgeo/osmium/internal/analysis"
+	"github.com/zdrgeo/osmium/pkg/analysis"
 )
 
 type FileAnalysisRepository struct {

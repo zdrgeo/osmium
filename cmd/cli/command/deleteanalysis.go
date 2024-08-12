@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/zdrgeo/osmium/internal/analysis"
+	"github.com/zdrgeo/osmium/pkg/analysis"
 )
 
 func NewDeleteAnalysisCommand(handler *analysis.DeleteAnalysisHandler) *cobra.Command {

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/zdrgeo/osmium/internal/analysis"
+	"github.com/zdrgeo/osmium/pkg/analysis"
 
 	"github.com/cli/go-gh/v2/pkg/api"
 )

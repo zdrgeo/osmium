@@ -1,28 +1,46 @@
 package view
 
 import (
+	"log"
 	"math"
+	"path"
 	"slices"
 
-	"github.com/zdrgeo/osmium/internal/analysis"
+	"github.com/zdrgeo/osmium/pkg/analysis"
 )
 
-type ViewBuilder struct {
-	nodeNames []string
+type FileViewBuilder struct {
+	ViewBuilder
 }
 
-func (builder *ViewBuilder) WithNodeNames(nodeNames []string) *ViewBuilder {
+func (builder *FileViewBuilder) WithNodeNames(nodeNames []string) *FileViewBuilder {
 	builder.nodeNames = nodeNames
 
 	return builder
 }
 
-func (builder *ViewBuilder) Build(analysis *analysis.Analysis) *AnalysisView {
+func containsFile(nodeNames []string, fileName string) bool {
+	for _, nodeName := range nodeNames {
+		match, err := path.Match(nodeName, fileName)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if match {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (builder *FileViewBuilder) Build(analysis *analysis.Analysis) *AnalysisView {
 	nodeNames := []string{}
 
 	for _, span := range analysis.Spans {
 		for nodeName := range span.Nodes {
-			if len(builder.nodeNames) == 0 || slices.Contains(builder.nodeNames, nodeName) {
+			if len(builder.nodeNames) == 0 || containsFile(builder.nodeNames, nodeName) {
 				nodeNames = append(nodeNames, nodeName)
 			}
 		}
@@ -43,7 +61,7 @@ func (builder *ViewBuilder) Build(analysis *analysis.Analysis) *AnalysisView {
 			for edgeNodeIndex, edgeNodeName := range nodeNames {
 				value := 0
 
-				if edge, ok := span.Nodes[nodeName].Edges[edgeNodeName]; ok {
+				if edge, ok := analysis.Spans[""].Nodes[nodeName].Edges[edgeNodeName]; ok {
 					value = len(edge.ChangeNames)
 				}
 

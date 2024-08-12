@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/zdrgeo/osmium/internal/analysis"
+	"github.com/zdrgeo/osmium/pkg/analysis"
 )
 
 func NewChangeAnalysisCommand(handler *analysis.ChangeAnalysisHandler) *cobra.Command {
