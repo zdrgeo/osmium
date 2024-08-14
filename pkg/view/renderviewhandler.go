@@ -45,7 +45,7 @@ func (handler *RenderViewHandler) RenderView(analysisName, name, spanName string
 	filePath := filepath.Join(viewPath, "view.html")
 
 	// renderViewToTerminal(view, spanName)
-	renderViewToHTMLFile(view, spanName, "internal/view/template/view.template", filePath)
+	renderViewToHTMLFile(view, spanName, "pkg/view/template/view.template", filePath)
 }
 
 func viewPath(basePath, analysisName, name string) string {
