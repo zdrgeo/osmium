@@ -6,11 +6,10 @@
 </head>
 <body>
     <div><strong>Analysis:</strong> {{ .Name }}</div>
-    <div class="view" style="margin: 20px; padding: 20px; border: 1px solid black; width: max-content; height: max-content;"></div>
+    <div class="view" style="position:relative; margin: 0px; padding: 20px; border: 1px solid black; width: max-content; height: max-content;"></div>
     <script type="module">
         import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
 
-        // https://observablehq.com/@stanfordvis/making-d3-charts-interactive
         const spanName = '';
 
         const view = await d3.json('view.json');
@@ -53,12 +52,20 @@
             return g;
         };
 
-        const renderCells = (xL, yL, cellWidth, cellHeight, cells) => {
-            function onMouseOver() {
+        const renderCells = (xLabels, yLabels, xL, yL, cellWidth, cellHeight, cells) => {
+            function onMouseEnter() {
                 const cell = d3.select(this).datum();
+
+                pane
+                    .style('left', (cell.xI + 1) * cellWidth + 40 + 'px')
+                    .style('top', (cell.yI + 1) * cellHeight + 40 + 'px')
+                    .style('visibility', 'visible');
+
+                pane.html('<div>X: ' + cell.xI + ' - ' + xLabels[cell.xI] + '</div><div>Y: ' + cell.yI + ' - ' + yLabels[cell.yI] + '</div><div>Value: ' + cell.value + '</div>');
             };
 
             function onMouseLeave() {
+                pane.style('visibility', 'hidden')
             };
 
             const x = d3
@@ -75,26 +82,39 @@
                 .select('.view > svg')
                 .remove();
 
+            const pane = d3
+                .select('.view')
+                .append('div')
+                    .attr('class', 'pane')
+                    .style('visibility', 'hidden')
+                    .style('position', 'absolute')
+                    .style('left', '0px')
+                    .style('top', '0px')
+                    .style('margin', '0px')
+                    .style('padding', '10px')
+                    .style('border', '1px solid black')
+                    .style('background-color', 'white');
+
             const svg = d3
                 .select('.view')
                 .append('svg')
-                    .attr("width", xL * cellWidth + 40)
-                    .attr("height", yL * cellHeight + 40);
+                    .attr('width', xL * cellWidth + 40)
+                    .attr('height', yL * cellHeight + 40);
 
-            svg.append("g")
-                .attr("transform", `translate(30, 20)`)
+            svg.append('g')
+                .attr('transform', `translate(30, 20)`)
                 .call(d3.axisTop(x).ticks(xL).tickSize(0));
 
-            svg.append("g")
-                .attr("transform", `translate(30, ${yL * cellWidth + 20})`)
+            svg.append('g')
+                .attr('transform', `translate(30, ${yL * cellWidth + 20})`)
                 .call(d3.axisBottom(x).ticks(xL).tickSize(0));
 
-            svg.append("g")
-                .attr("transform", `translate(20, 30)`)
+            svg.append('g')
+                .attr('transform', `translate(20, 30)`)
                 .call(d3.axisLeft(y).ticks(yL).tickSize(0));
 
-            svg.append("g")
-                .attr("transform", `translate(${xL * cellHeight + 20}, 30)`)
+            svg.append('g')
+                .attr('transform', `translate(${xL * cellHeight + 20}, 30)`)
                 .call(d3.axisRight(y).ticks(yL).tickSize(0));
 
             const packNodes = svg
@@ -112,7 +132,7 @@
                 .append('g')
                     .attr('class', 'cell')
                     .attr('transform', c => `translate(${c.xI * cellWidth}, ${c.yI * cellHeight})`)
-                    .each((c, i, nodes) => renderCell(d3.select(nodes[i]), cellWidth, cellHeight, c.color, c.value).on("mouseover", onMouseOver).on("mouseleave", onMouseLeave));
+                    .each((c, i, nodes) => renderCell(d3.select(nodes[i]), cellWidth, cellHeight, c.color, c.value).on('mouseenter', onMouseEnter).on('mouseleave', onMouseLeave));
         };
 
         const applyValues = (cells, values, valueColor) => {
@@ -145,7 +165,7 @@
 
         applyValues(cells, view.SpanViews[spanName].Values, valueColor);
 
-        renderCells(view.NodeNames.length, view.NodeNames.length, cellWidth, cellHeight, cells);
+        renderCells(view.NodeNames, view.NodeNames, view.NodeNames.length, view.NodeNames.length, cellWidth, cellHeight, cells);
     </script>
 </body>
 </html>
