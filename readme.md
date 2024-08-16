@@ -28,10 +28,9 @@ Configuration
 ```
 # config.env
 
+BASEPATH=
 SOURCE=github:pullrequest
 GITHUB_TOKEN=
-GITHUB_REPOSITORY_OWNER=
-GITHUB_REPOSITORY_NAME=
 ```
 
 Commands to manipulate the DSM analyses
