@@ -7,7 +7,13 @@ This is a prototype tool for exploring the dependencies between elements in a so
 Osmium uses the DSM ([Design Structure Matrix](https://en.wikipedia.org/wiki/Design_structure_matrix)) methods to measure and visualize the cohession between files in a GitHub repository by tracking how often the files have been changed together in a logical units like Git commits or GitHub Pull Requests.
 It is implemented as a CLI application with commands for generating analyses and building different views (presentations) on them.
 
-![Analysis View](./analysisview.png)
+Analysis View in Terminal
+
+![Analysis View in Terminal](./analysisview_terminal.png)
+
+Analysis View in Web Browser
+
+![Analysis View in Web Browser](./analysisview_webbrowser.png)
 
 ## Concepts
 
@@ -31,9 +37,9 @@ GITHUB_REPOSITORY_NAME=
 Commands to manipulate the DSM analyses
 
 ```
-osmium analysis create --name="ticketing_tixets" --source="github:pullrequest"
+osmium analysis create --name="ticketing_tixets" --source="github:pullrequest" --source-option="repository-owner=scaleforce,repository-name=tixets"
 
-osmium analysis change --name="ticketing_tixets" --source="github:pullrequest"
+osmium analysis change --name="ticketing_tixets" --source="github:pullrequest" --source-option="repository-owner=scaleforce,repository-name=tixets"
 
 osmium analysis delete --name="ticketing_tixets"
 ```
