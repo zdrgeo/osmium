@@ -9,8 +9,6 @@ import (
 )
 
 func NewCreateAnalysisCommand(handler *analysis.CreateAnalysisHandler) *cobra.Command {
-	// var source source
-
 	command := &cobra.Command{
 		Use:   "create",
 		Short: "Create analysis",
