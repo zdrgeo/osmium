@@ -1,7 +1,6 @@
 package command
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -29,9 +28,13 @@ func NewCreateAnalysisCommand(handler *analysis.CreateAnalysisHandler) *cobra.Co
 				fmt.Printf("Error retrieving source: %s\n", err.Error())
 			}
 
-			_ = source
+			sourceOptions, err := cmd.Flags().GetStringToString("source-option")
 
-			handler.CreateAnalysis(name)
+			if err != nil {
+				fmt.Printf("Error retrieving source options: %s\n", err.Error())
+			}
+
+			handler.CreateAnalysis(name, source, sourceOptions)
 		},
 	}
 
@@ -41,29 +44,8 @@ func NewCreateAnalysisCommand(handler *analysis.CreateAnalysisHandler) *cobra.Co
 	viper.BindPFlag("source", command.Flags().Lookup("source"))
 	viper.SetDefault("source", "github:pullrequest")
 
+	command.Flags().StringToString("source-option", map[string]string{}, "Options of the source")
+	viper.BindPFlag("sourceoptions", command.Flags().Lookup("source-option"))
+
 	return command
-}
-
-type source string
-
-const (
-	gitHub_pullRequest source = "github:pullrequest"
-)
-
-func (s *source) String() string {
-	return string(*s)
-}
-
-func (s *source) Set(value string) error {
-	switch value {
-	case "github:pullrequest":
-		*s = source(value)
-		return nil
-	default:
-		return errors.New(`must be one of "github:pullrequest"`)
-	}
-}
-
-func (s *source) Type() string {
-	return "source"
 }

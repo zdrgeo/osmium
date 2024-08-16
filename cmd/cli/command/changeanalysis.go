@@ -26,16 +26,24 @@ func NewChangeAnalysisCommand(handler *analysis.ChangeAnalysisHandler) *cobra.Co
 				fmt.Printf("Error retrieving source: %s\n", err.Error())
 			}
 
-			_ = source
+			sourceOptions, err := cmd.Flags().GetStringToString("source-option")
 
-			handler.ChangeAnalysis(name)
+			if err != nil {
+				fmt.Printf("Error retrieving source options: %s\n", err.Error())
+			}
+
+			handler.ChangeAnalysis(name, source, sourceOptions)
 		},
 	}
 
 	command.Flags().String("source", "github:pullrequest", "Source of the analysis")
+	// command.Flags().Var(&source, "source", "Source of the analysis")
 	command.MarkFlagRequired("source")
 	viper.BindPFlag("source", command.Flags().Lookup("source"))
 	viper.SetDefault("source", "github:pullrequest")
+
+	command.Flags().StringToString("source-option", map[string]string{}, "Options of the source")
+	viper.BindPFlag("sourceoptions", command.Flags().Lookup("source-option"))
 
 	return command
 }

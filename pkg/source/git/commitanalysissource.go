@@ -14,7 +14,7 @@ func NewCommitAnalysisSource() *CommitAnalysisSource {
 	return &CommitAnalysisSource{}
 }
 
-func (source *CommitAnalysisSource) Query() *analysis.Analysis {
+func (source *CommitAnalysisSource) Query(options map[string]string) *analysis.Analysis {
 	log.Fatal(errors.New("not implemented"))
 
 	return nil

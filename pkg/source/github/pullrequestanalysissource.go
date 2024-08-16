@@ -1,6 +1,7 @@
 package github
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -12,17 +13,27 @@ import (
 )
 
 type PullRequestAnalysisSource struct {
-	client          *api.GraphQLClient
-	repositoryOwner string
-	repositoryName  string
+	client *api.GraphQLClient
 }
 
-func NewPullRequestAnalysisSource(client *api.GraphQLClient, repositoryOwner, repositoryName string) *PullRequestAnalysisSource {
-	return &PullRequestAnalysisSource{client: client, repositoryOwner: repositoryOwner, repositoryName: repositoryName}
+func NewPullRequestAnalysisSource(client *api.GraphQLClient) *PullRequestAnalysisSource {
+	return &PullRequestAnalysisSource{client: client}
 }
 
-func (source *PullRequestAnalysisSource) Query() *analysis.Analysis {
-	pullRequests, err := source.getPullRequests()
+func (source *PullRequestAnalysisSource) Query(options map[string]string) (*analysis.Analysis, error) {
+	repositoryOwner, ok := options["repository-owner"]
+
+	if !ok {
+		return nil, errors.New("missing required source option repository-owner")
+	}
+
+	repositoryName, ok := options["repository-name"]
+
+	if !ok {
+		return nil, errors.New("missing required source option repository-name")
+	}
+
+	pullRequests, err := source.getPullRequests(repositoryOwner, repositoryName)
 
 	if err != nil {
 		log.Fatal(err)
@@ -75,7 +86,7 @@ func (source *PullRequestAnalysisSource) Query() *analysis.Analysis {
 
 	spans[span.Name] = span
 
-	return &analysis.Analysis{Modules: modules, Spans: spans}
+	return &analysis.Analysis{Modules: modules, Spans: spans}, nil
 }
 
 type (
@@ -126,15 +137,15 @@ type (
 	}
 )
 
-func (source *PullRequestAnalysisSource) getPullRequests() ([]pullRequest, error) {
+func (source *PullRequestAnalysisSource) getPullRequests(repositoryOwner, repositoryName string) ([]pullRequest, error) {
 	var query struct {
 		RateLimit  rateLimit
 		Repository repository `graphql:"repository(owner: $owner, name: $name)"`
 	}
 
 	variables := map[string]any{
-		"owner":              graphql.String(source.repositoryOwner),
-		"name":               graphql.String(source.repositoryName),
+		"owner":              graphql.String(repositoryOwner),
+		"name":               graphql.String(repositoryName),
 		"pullRequestsCursor": graphql.String(""),
 	}
 

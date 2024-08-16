@@ -1,5 +1,5 @@
 package analysis
 
 type AnalysisSource interface {
-	Query() *Analysis
+	Query(options map[string]string) (*Analysis, error)
 }

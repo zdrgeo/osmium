@@ -32,10 +32,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	analysisSource := github.NewPullRequestAnalysisSource(client, viper.GetString("GITHUB_REPOSITORY_OWNER"), viper.GetString("GITHUB_REPOSITORY_NAME"))
+	analysisSource := github.NewPullRequestAnalysisSource(client)
 
-	analysisRepository := repository.NewFileAnalysisRepository("") // Empty means user home
-	viewRepository := repository.NewFileViewRepository("")         // Empty means user home
+	analysisRepository := repository.NewFileAnalysisRepository(viper.GetString("BASEPATH")) // Empty means user home
+	viewRepository := repository.NewFileViewRepository(viper.GetString("BASEPATH"))         // Empty means user home
 
 	createAnalysisHandler := analysis.NewCreateAnalysisHandler(analysisSource, analysisRepository)
 	changeAnalysisHandler := analysis.NewChangeAnalysisHandler(analysisSource, analysisRepository)
