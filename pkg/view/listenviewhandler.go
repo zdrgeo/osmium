@@ -1,9 +1,14 @@
 package view
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
+	"time"
+
+	"github.com/coder/websocket"
 )
 
 type ListenViewHandler struct {
@@ -33,29 +38,95 @@ func (handler *ListenViewHandler) ListenView(analysisName, name, address string)
 		log.Fatal(err)
 	}
 
-	fileServer := http.FileServer(http.Dir(viewPath))
+	fileHandler := http.FileServer(http.Dir(viewPath))
 
-	// http.Handle("analysis/view/", http.StripPrefix("/analysis/view/", fileServer))
-	http.Handle("/", fileServer)
+	// http.Handle("analysis/view/", http.StripPrefix("/analysis/view/", fileHandler))
+	http.Handle("/", fileHandler)
 
-	log.Printf("Listening on %s", address)
+	http.HandleFunc("/change", changeHandler)
+
+	log.Printf("Listening on %s\n", address)
 
 	if err := http.ListenAndServe(address, nil); err != nil {
 		log.Fatal(err)
 	}
 }
 
+func changeHandler(writer http.ResponseWriter, request *http.Request) {
+	connection, err := websocket.Accept(writer, request, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer connection.CloseNow()
+
+	timeoutContext, cancel := context.WithTimeout(request.Context(), 10*time.Minute)
+
+	defer cancel()
+
+	timeoutContext = connection.CloseRead(timeoutContext)
+
+	// TODO: Temporarily hardcoded
+	userHomePath, err := os.UserHomeDir()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	filePath := filepath.Join(userHomePath, "osmium", "analysis", "ticketing_staffmanager", "view", "app", "view.json")
+	//
+
+	oldStat, err := os.Stat(filePath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ticker := time.NewTicker(5 * time.Second)
+
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-timeoutContext.Done():
+			err = connection.Close(websocket.StatusNormalClosure, "")
+
+			if err != nil && websocket.CloseStatus(err) != websocket.StatusNormalClosure && websocket.CloseStatus(err) != websocket.StatusGoingAway {
+				log.Fatal(err)
+			}
+			return
+		case <-ticker.C:
+			newStat, err := os.Stat(filePath)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if oldStat.ModTime() != newStat.ModTime() {
+				err := connection.Close(websocket.StatusNormalClosure, "changed")
+
+				if err != nil && websocket.CloseStatus(err) != websocket.StatusNormalClosure && websocket.CloseStatus(err) != websocket.StatusGoingAway {
+					log.Fatal(err)
+				}
+
+				return
+			}
+		}
+	}
+}
+
 /*
-exit := make(chan struct{})
+done := make(chan struct{})
 
 go func() {
-	log.Printf("Listening on %s", address)
+	log.Printf("Listening on %s\n", address)
 
 	if err := http.ListenAndServe(address, nil); err != nil {
 		log.Fatal(err)
 	}
 
-	exit <- struct{}{}
+	done <- struct{}{}
 }()
 
 var err error
@@ -73,5 +144,5 @@ if err != nil {
 		log.Fatal(err)
 }
 
-<-exit
+<-done
 */

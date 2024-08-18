@@ -12,8 +12,6 @@
 
         const spanName = '';
 
-        const view = await d3.json('view.json');
-
         const cellWidth = 20;
         const cellHeight = 20;
 
@@ -149,6 +147,8 @@
             }
         };
 
+        const view = await d3.json('view.json');
+
         const cells = generateCells(view.NodeNames.length, view.NodeNames.length);
 
         // #0000ff, #5f00ff, #8700ff, #af00ff, #d700ff, #ff00ff
@@ -166,6 +166,30 @@
         applyValues(cells, view.SpanViews[spanName].Values, valueColor);
 
         renderCells(view.NodeNames, view.NodeNames, view.NodeNames.length, view.NodeNames.length, cellWidth, cellHeight, cells);
+    </script>
+    <script type="module">
+        const minTimeout = 500;
+        const maxTimeout = 30000;
+
+        let timeout = minTimeout;
+
+        const connect = () => {
+            const socket = new WebSocket("ws://localhost:3000/change");
+
+            socket.onopen = () => {
+                timeout = minTimeout;
+            };  
+
+            socket.onclose = () => {
+                setTimeout(() => { connect(); }, Math.min(maxTimeout, timeout += timeout));
+            }
+
+            socket.onerror = () => {
+                socket.close();
+            };  
+        };
+
+        connect();
     </script>
 </body>
 </html>
