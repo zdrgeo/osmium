@@ -43,7 +43,11 @@ func (handler *ListenViewHandler) ListenView(analysisName, name, address string)
 	// http.Handle("analysis/view/", http.StripPrefix("/analysis/view/", fileHandler))
 	http.Handle("/", fileHandler)
 
-	http.HandleFunc("/change", changeHandler)
+	fileName := filepath.Join(viewPath, "view.json")
+
+	fileChangeHandler := newFileChangeHandler(fileName)
+
+	http.Handle("/change", http.HandlerFunc(fileChangeHandler.Handle))
 
 	log.Printf("Listening on %s\n", address)
 
@@ -52,7 +56,15 @@ func (handler *ListenViewHandler) ListenView(analysisName, name, address string)
 	}
 }
 
-func changeHandler(writer http.ResponseWriter, request *http.Request) {
+type fileChangeHandler struct {
+	fileName string
+}
+
+func newFileChangeHandler(fileName string) *fileChangeHandler {
+	return &fileChangeHandler{fileName: fileName}
+}
+
+func (handler *fileChangeHandler) Handle(writer http.ResponseWriter, request *http.Request) {
 	connection, err := websocket.Accept(writer, request, nil)
 
 	if err != nil {
@@ -67,17 +79,7 @@ func changeHandler(writer http.ResponseWriter, request *http.Request) {
 
 	timeoutContext = connection.CloseRead(timeoutContext)
 
-	// TODO: Temporarily hardcoded
-	userHomePath, err := os.UserHomeDir()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	filePath := filepath.Join(userHomePath, "osmium", "analysis", "ticketing_staffmanager", "view", "app", "view.json")
-	//
-
-	oldStat, err := os.Stat(filePath)
+	oldStat, err := os.Stat(handler.fileName)
 
 	if err != nil {
 		log.Fatal(err)
@@ -97,7 +99,7 @@ func changeHandler(writer http.ResponseWriter, request *http.Request) {
 			}
 			return
 		case <-ticker.C:
-			newStat, err := os.Stat(filePath)
+			newStat, err := os.Stat(handler.fileName)
 
 			if err != nil {
 				log.Fatal(err)

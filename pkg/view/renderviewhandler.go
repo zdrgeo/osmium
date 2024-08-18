@@ -42,10 +42,10 @@ func (handler *RenderViewHandler) RenderView(analysisName, name, spanName string
 		log.Fatal(err)
 	}
 
-	filePath := filepath.Join(viewPath, "view.html")
+	fileName := filepath.Join(viewPath, "view.html")
 
 	// renderViewToTerminal(view, spanName)
-	renderViewToHTMLFile(view, spanName, "pkg/view/template/view.template", filePath)
+	renderViewToHTMLFile(view, spanName, "pkg/view/template/view.template", fileName)
 }
 
 func viewPath(basePath, analysisName, name string) string {
