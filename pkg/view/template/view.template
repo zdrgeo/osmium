@@ -147,27 +147,30 @@
             }
         };
 
-        const view = await d3.json('view.json');
+        const render = async () => {
+            const view = await d3.json('view.json', { cache: "no-cache" });
 
-        const cells = generateCells(view.NodeNames.length, view.NodeNames.length);
+            const cells = generateCells(view.NodeNames.length, view.NodeNames.length);
 
-        // #0000ff, #5f00ff, #8700ff, #af00ff, #d700ff, #ff00ff
-        // #005fff, #5f5fff, #875fff, #af5fff, #d75fff, #ff5fff
-        // #0087ff, #5f87ff, #8787ff, #af87ff, #d787ff, #ff87ff
-        // #00afff, #5fafff, #87afff, #afafff, #d7afff, #ffafff
-        // #00d7ff, #5fd7ff, #87d7ff, #afd7ff, #d7d7ff, #ffd7ff
-        // #00ffff, #5fffff, #87ffff, #afffff, #d7ffff, #ffffff
+            // #0000ff, #5f00ff, #8700ff, #af00ff, #d700ff, #ff00ff
+            // #005fff, #5f5fff, #875fff, #af5fff, #d75fff, #ff5fff
+            // #0087ff, #5f87ff, #8787ff, #af87ff, #d787ff, #ff87ff
+            // #00afff, #5fafff, #87afff, #afafff, #d7afff, #ffafff
+            // #00d7ff, #5fd7ff, #87d7ff, #afd7ff, #d7d7ff, #ffd7ff
+            // #00ffff, #5fffff, #87ffff, #afffff, #d7ffff, #ffffff
 
-        const valueColor = d3
-            .scaleLinear()
-            .domain([view.SpanViews[spanName].MinValue, view.SpanViews[spanName].MaxValue])
-            .range(['#00ffff', '#ff00ff']);
+            const valueColor = d3
+                .scaleLinear()
+                .domain([view.SpanViews[spanName].MinValue, view.SpanViews[spanName].MaxValue])
+                .range(['#00ffff', '#ff00ff']);
 
-        applyValues(cells, view.SpanViews[spanName].Values, valueColor);
+            applyValues(cells, view.SpanViews[spanName].Values, valueColor);
 
-        renderCells(view.NodeNames, view.NodeNames, view.NodeNames.length, view.NodeNames.length, cellWidth, cellHeight, cells);
-    </script>
-    <script type="module">
+            renderCells(view.NodeNames, view.NodeNames, view.NodeNames.length, view.NodeNames.length, cellWidth, cellHeight, cells);
+        };
+
+        await render();
+
         const minTimeout = 500;
         const maxTimeout = 30000;
 
@@ -176,7 +179,9 @@
         const connect = () => {
             const socket = new WebSocket("ws://localhost:3000/change");
 
-            socket.onopen = () => {
+            socket.onopen = async () => {
+                await render();
+
                 timeout = minTimeout;
             };  
 
