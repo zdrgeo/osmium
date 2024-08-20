@@ -4,15 +4,14 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/zdrgeo/osmium/pkg/view"
 )
 
-func NewCreateViewCommand(handler *view.CreateViewHandler) *cobra.Command {
+func NewRenderWebBrowserCommand(handler *view.RenderWebBrowserHandler) *cobra.Command {
 	command := &cobra.Command{
-		Use:   "create",
-		Short: "Create view",
-		Long:  `Create view.`,
+		Use:   "render",
+		Short: "Render web browser",
+		Long:  `Render web browser.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			analysisName, err := cmd.Flags().GetString("analysis-name")
 
@@ -26,18 +25,17 @@ func NewCreateViewCommand(handler *view.CreateViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving view name: %s\n", err.Error())
 			}
 
-			nodeNames, err := cmd.Flags().GetStringArray("node-name")
+			spanName, err := cmd.Flags().GetString("span-name")
 
 			if err != nil {
-				fmt.Printf("Error retrieving node names: %s\n", err.Error())
+				fmt.Printf("Error retrieving span name: %s\n", err.Error())
 			}
 
-			handler.CreateView(analysisName, viewName, nodeNames)
+			handler.RenderWebBrowser(analysisName, viewName, spanName)
 		},
 	}
 
-	command.Flags().StringArray("node-name", []string{}, "Names of the nodes")
-	viper.BindPFlag("nodenames", command.Flags().Lookup("node-name"))
+	command.Flags().String("span-name", "", "Name of the span")
 
 	return command
 }

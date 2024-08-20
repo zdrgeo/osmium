@@ -7,11 +7,11 @@ import (
 	"github.com/zdrgeo/osmium/pkg/view"
 )
 
-func NewListenViewCommand(handler *view.ListenViewHandler) *cobra.Command {
+func NewListenWebBrowserCommand(handler *view.ListenWebBrowserHandler) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "listen",
-		Short: "Listen view",
-		Long:  `Listen view.`,
+		Short: "Listen web browser",
+		Long:  `Listen web browser.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			analysisName, err := cmd.Flags().GetString("analysis-name")
 
@@ -19,10 +19,10 @@ func NewListenViewCommand(handler *view.ListenViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving analysis name: %s\n", err.Error())
 			}
 
-			name, err := cmd.Flags().GetString("name")
+			viewName, err := cmd.Flags().GetString("view-name")
 
 			if err != nil {
-				fmt.Printf("Error retrieving name: %s\n", err.Error())
+				fmt.Printf("Error retrieving view name: %s\n", err.Error())
 			}
 
 			address, err := cmd.Flags().GetString("address")
@@ -31,7 +31,7 @@ func NewListenViewCommand(handler *view.ListenViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving address: %s\n", err.Error())
 			}
 
-			handler.ListenView(analysisName, name, address)
+			handler.ListenWebBrowser(analysisName, viewName, address)
 		},
 	}
 

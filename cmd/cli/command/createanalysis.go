@@ -14,10 +14,10 @@ func NewCreateAnalysisCommand(handler *analysis.CreateAnalysisHandler) *cobra.Co
 		Short: "Create analysis",
 		Long:  `Create analysis.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			name, err := cmd.Flags().GetString("name")
+			analysisName, err := cmd.Flags().GetString("analysis-name")
 
 			if err != nil {
-				fmt.Printf("Error retrieving name: %s\n", err.Error())
+				fmt.Printf("Error retrieving analysis name: %s\n", err.Error())
 			}
 
 			source, err := cmd.Flags().GetString("source")
@@ -32,7 +32,7 @@ func NewCreateAnalysisCommand(handler *analysis.CreateAnalysisHandler) *cobra.Co
 				fmt.Printf("Error retrieving source options: %s\n", err.Error())
 			}
 
-			handler.CreateAnalysis(name, source, sourceOptions)
+			handler.CreateAnalysis(analysisName, source, sourceOptions)
 		},
 	}
 

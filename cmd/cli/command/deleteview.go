@@ -19,13 +19,13 @@ func NewDeleteViewCommand(handler *view.DeleteViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving analysis name: %s\n", err.Error())
 			}
 
-			name, err := cmd.Flags().GetString("name")
+			viewName, err := cmd.Flags().GetString("view-name")
 
 			if err != nil {
-				fmt.Printf("Error retrieving name: %s\n", err.Error())
+				fmt.Printf("Error retrieving view name: %s\n", err.Error())
 			}
 
-			handler.DeleteView(analysisName, name)
+			handler.DeleteView(analysisName, viewName)
 		},
 	}
 

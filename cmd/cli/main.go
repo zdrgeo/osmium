@@ -44,8 +44,10 @@ func main() {
 	createViewHandler := view.NewCreateViewHandler(analysisRepository, viewRepository)
 	changeViewHandler := view.NewChangeViewHandler(analysisRepository, viewRepository)
 	deleteViewHandler := view.NewDeleteViewHandler(viewRepository)
-	renderViewHandler := view.NewRenderViewHandler(viewRepository)
-	listenViewHandler := view.NewListenViewHandler()
+	renderTerminalHandler := view.NewRenderTerminalHandler(viewRepository)
+	renderWebBrowserHandler := view.NewRenderWebBrowserHandler(viewRepository)
+	listenWebBrowserHandler := view.NewListenWebBrowserHandler()
+	renderCSVHandler := view.NewRenderCSVHandler(viewRepository)
 
 	createAnalysisCommand := command.NewCreateAnalysisCommand(createAnalysisHandler)
 	changeAnalysisCommand := command.NewChangeAnalysisCommand(changeAnalysisHandler)
@@ -56,10 +58,21 @@ func main() {
 	createViewCommand := command.NewCreateViewCommand(createViewHandler)
 	changeViewCommand := command.NewChangeViewCommand(changeViewHandler)
 	deleteViewCommand := command.NewDeleteViewCommand(deleteViewHandler)
-	renderViewCommand := command.NewRenderViewCommand(renderViewHandler)
-	listenViewCommand := command.NewListenViewCommand(listenViewHandler)
 
-	viewCommand := command.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, renderViewCommand, listenViewCommand)
+	renderTerminalCommand := command.NewRenderTerminalCommand(renderTerminalHandler)
+
+	terminalCommand := command.NewTerminalCommand(renderTerminalCommand)
+
+	renderWebBrowserCommand := command.NewRenderWebBrowserCommand(renderWebBrowserHandler)
+	listenWebBrowserCommand := command.NewListenWebBrowserCommand(listenWebBrowserHandler)
+
+	webBrowserCommand := command.NewWebBrowserCommand(renderWebBrowserCommand, listenWebBrowserCommand)
+
+	renderCSVCommand := command.NewRenderCSVCommand(renderCSVHandler)
+
+	csvCommand := command.NewCSVCommand(renderCSVCommand)
+
+	viewCommand := command.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, terminalCommand, webBrowserCommand, csvCommand)
 
 	osmiumCommand := command.NewOsmiumCommand(analysisCommand, viewCommand)
 

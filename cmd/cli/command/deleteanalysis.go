@@ -13,13 +13,13 @@ func NewDeleteAnalysisCommand(handler *analysis.DeleteAnalysisHandler) *cobra.Co
 		Short: "Delete analysis",
 		Long:  `Delete analysis.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			name, err := cmd.Flags().GetString("name")
+			analysisName, err := cmd.Flags().GetString("analysis-name")
 
 			if err != nil {
-				fmt.Printf("Error retrieving name: %s\n", err.Error())
+				fmt.Printf("Error retrieving analysis name: %s\n", err.Error())
 			}
 
-			handler.DeleteAnalysis(name)
+			handler.DeleteAnalysis(analysisName)
 		},
 	}
 

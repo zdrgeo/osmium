@@ -7,11 +7,11 @@ import (
 	"github.com/zdrgeo/osmium/pkg/view"
 )
 
-func NewRenderViewCommand(handler *view.RenderViewHandler) *cobra.Command {
+func NewRenderCSVCommand(handler *view.RenderCSVHandler) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "render",
-		Short: "Render view",
-		Long:  `Render view.`,
+		Short: "Render csv",
+		Long:  `Render csv.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			analysisName, err := cmd.Flags().GetString("analysis-name")
 
@@ -19,10 +19,10 @@ func NewRenderViewCommand(handler *view.RenderViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving analysis name: %s\n", err.Error())
 			}
 
-			name, err := cmd.Flags().GetString("name")
+			viewName, err := cmd.Flags().GetString("view-name")
 
 			if err != nil {
-				fmt.Printf("Error retrieving name: %s\n", err.Error())
+				fmt.Printf("Error retrieving view name: %s\n", err.Error())
 			}
 
 			spanName, err := cmd.Flags().GetString("span-name")
@@ -31,7 +31,7 @@ func NewRenderViewCommand(handler *view.RenderViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving span name: %s\n", err.Error())
 			}
 
-			handler.RenderView(analysisName, name, spanName)
+			handler.RenderCSV(analysisName, viewName, spanName)
 		},
 	}
 

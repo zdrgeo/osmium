@@ -11,15 +11,15 @@ import (
 	"github.com/coder/websocket"
 )
 
-type ListenViewHandler struct {
+type ListenWebBrowserHandler struct {
 	basePath string
 }
 
-func NewListenViewHandler() *ListenViewHandler {
-	return &ListenViewHandler{}
+func NewListenWebBrowserHandler() *ListenWebBrowserHandler {
+	return &ListenWebBrowserHandler{}
 }
 
-func (handler *ListenViewHandler) ListenView(analysisName, name, address string) {
+func (handler *ListenWebBrowserHandler) ListenWebBrowser(analysisName, viewName, address string) {
 	basePath := handler.basePath
 
 	if basePath == "" {
@@ -32,7 +32,7 @@ func (handler *ListenViewHandler) ListenView(analysisName, name, address string)
 		basePath = userHomePath
 	}
 
-	viewPath := viewPath(basePath, analysisName, name)
+	viewPath := viewPath(basePath, analysisName, viewName)
 
 	if err := os.MkdirAll(viewPath, 0750); err != nil {
 		log.Fatal(err)
@@ -40,7 +40,7 @@ func (handler *ListenViewHandler) ListenView(analysisName, name, address string)
 
 	fileHandler := http.FileServer(http.Dir(viewPath))
 
-	// http.Handle("analysis/view/", http.StripPrefix("/analysis/view/", fileHandler))
+	// http.Handle("/analysis/view/webbrowser", http.StripPrefix("/analysis/view/webbrowser", fileHandler))
 	http.Handle("/", fileHandler)
 
 	fileName := filepath.Join(viewPath, "view.json")

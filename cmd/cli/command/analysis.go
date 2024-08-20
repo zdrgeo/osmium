@@ -1,8 +1,6 @@
 package command
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -12,14 +10,11 @@ func NewAnalysisCommand(createAnalysisCommand, changeAnalysisCommand, deleteAnal
 		Use:   "analysis",
 		Short: "Analysis",
 		Long:  `Analysis.`,
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("analysis called")
-		},
 	}
 
-	command.PersistentFlags().String("name", "", "Name of the analysis")
-	command.MarkPersistentFlagRequired("name")
-	viper.BindPFlag("analysisname", command.PersistentFlags().Lookup("name"))
+	command.PersistentFlags().String("analysis-name", "", "Name of the analysis")
+	command.MarkPersistentFlagRequired("analysis-name")
+	viper.BindPFlag("analysisname", command.PersistentFlags().Lookup("analysis-name"))
 
 	command.AddCommand(createAnalysisCommand)
 	command.AddCommand(changeAnalysisCommand)

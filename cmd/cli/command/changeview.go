@@ -20,10 +20,10 @@ func NewChangeViewCommand(handler *view.ChangeViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving analysis name: %s\n", err.Error())
 			}
 
-			name, err := cmd.Flags().GetString("name")
+			viewName, err := cmd.Flags().GetString("view-name")
 
 			if err != nil {
-				fmt.Printf("Error retrieving name: %s\n", err.Error())
+				fmt.Printf("Error retrieving view name: %s\n", err.Error())
 			}
 
 			nodeNames, err := cmd.Flags().GetStringArray("node-name")
@@ -32,7 +32,7 @@ func NewChangeViewCommand(handler *view.ChangeViewHandler) *cobra.Command {
 				fmt.Printf("Error retrieving node names: %s\n", err.Error())
 			}
 
-			handler.ChangeView(analysisName, name, nodeNames)
+			handler.ChangeView(analysisName, viewName, nodeNames)
 		},
 	}
 
