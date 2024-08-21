@@ -22,6 +22,22 @@ func (builder *PatternViewBuilder) WithNodeNames(nodeNames []string) *PatternVie
 func (builder *PatternViewBuilder) Build(analysis *analysis.Analysis) *AnalysisView {
 	nodeNames := []string{}
 
+	/*
+		compiledPatterns, err := compilePatterns(builder.nodeNames)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, span := range analysis.Spans {
+			for nodeName := range span.Nodes {
+				if len(compiledPatterns) == 0 || matchCompiledPatterns(compiledPatterns, nodeName) {
+					nodeNames = append(nodeNames, nodeName)
+				}
+			}
+		}
+	*/
+
 	for _, span := range analysis.Spans {
 		for nodeName := range span.Nodes {
 			if len(builder.nodeNames) == 0 || matchPattern(builder.nodeNames, nodeName) {
@@ -80,6 +96,32 @@ func matchPattern(patterns []string, text string) bool {
 		}
 
 		if match {
+			return true
+		}
+	}
+
+	return false
+}
+
+func compilePatterns(patterns []string) ([]*regexp.Regexp, error) {
+	compiledPatterns := []*regexp.Regexp{}
+
+	for _, pattern := range patterns {
+		compiledPattern, err := regexp.Compile(pattern)
+
+		if err != nil {
+			return nil, err
+		}
+
+		compiledPatterns = append(compiledPatterns, compiledPattern)
+	}
+
+	return compiledPatterns, nil
+}
+
+func matchCompiledPatterns(compiledPatterns []*regexp.Regexp, text string) bool {
+	for _, compiledPattern := range compiledPatterns {
+		if compiledPattern.MatchString(text) {
 			return true
 		}
 	}
