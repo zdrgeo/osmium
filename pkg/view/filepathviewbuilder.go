@@ -9,38 +9,22 @@ import (
 	"github.com/zdrgeo/osmium/pkg/analysis"
 )
 
-type FileViewBuilder struct {
+type FilePathViewBuilder struct {
 	ViewBuilder
 }
 
-func (builder *FileViewBuilder) WithNodeNames(nodeNames []string) *FileViewBuilder {
+func (builder *FilePathViewBuilder) WithNodeNames(nodeNames []string) *FilePathViewBuilder {
 	builder.nodeNames = nodeNames
 
 	return builder
 }
 
-func containsFile(nodeNames []string, fileName string) bool {
-	for _, nodeName := range nodeNames {
-		match, err := path.Match(nodeName, fileName)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if match {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (builder *FileViewBuilder) Build(analysis *analysis.Analysis) *AnalysisView {
+func (builder *FilePathViewBuilder) Build(analysis *analysis.Analysis) *AnalysisView {
 	nodeNames := []string{}
 
 	for _, span := range analysis.Spans {
 		for nodeName := range span.Nodes {
-			if len(builder.nodeNames) == 0 || containsFile(builder.nodeNames, nodeName) {
+			if len(builder.nodeNames) == 0 || matchFilePath(builder.nodeNames, nodeName) {
 				nodeNames = append(nodeNames, nodeName)
 			}
 		}
@@ -85,4 +69,20 @@ func (builder *FileViewBuilder) Build(analysis *analysis.Analysis) *AnalysisView
 	}
 
 	return &AnalysisView{NodeNames: nodeNames, SpanViews: spanViews}
+}
+
+func matchFilePath(filePaths []string, fileName string) bool {
+	for _, filePath := range filePaths {
+		match, err := path.Match(filePath, fileName)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if match {
+			return true
+		}
+	}
+
+	return false
 }

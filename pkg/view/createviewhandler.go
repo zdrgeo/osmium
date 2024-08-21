@@ -15,7 +15,8 @@ func (handler *CreateViewHandler) CreateView(analysisName, name string, nodeName
 	analysis := handler.analysisRepository.Get(analysisName)
 
 	// builder := &ViewBuilder{}
-	builder := &FileViewBuilder{}
+	// builder := &FilePathViewBuilder{}
+	builder := &PatternViewBuilder{}
 
 	view := builder.
 		WithNodeNames(nodeNames).
