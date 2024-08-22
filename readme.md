@@ -110,11 +110,16 @@ osmium analysis delete
 
 #### Examples
 
+Generate an analysis model using the GitHub repository with owner 'scaleforce' and name 'tixets' as a source. Store the generated analysis model to the user home directory under the name "ticketing_tixets".
 ```
 osmium analysis create --analysis-name="ticketing_tixets" --source="github:pullrequest" --source-option="repository-owner=scaleforce,repository-name=tixets"
-
+```
+Alter the stored analysis model with name "ticketing_tixets". Use the same GitHub repository with owner "scaleforce" and name "tixets" as a source.
+```
 osmium analysis change --analysis-name="ticketing_tixets" --source="github:pullrequest" --source-option="repository-owner=scaleforce,repository-name=tixets"
-
+```
+Remove the stored analysis model with name "ticketing_tixets" from the user home directory.
+```
 osmium analysis delete --analysis-name="ticketing_tixets"
 ```
 
@@ -198,18 +203,31 @@ osmium view csv render
 
 #### Examples
 
+Geterate a view model based on the analysis with name "ticketing_tixets". Store the generated view model to the user home directory under the name "app". Scope the view model to nodes with names that match any of the the file paths "app/Controller/\*.php", "app/Service/\*.php" or "app/Repository/\*.php".
 ```
 osmium view create --analysis-name="ticketing_tixets" --view-name="app" --node-name="app/Controller/*.php" --node-name="app/Service/*.php" --node-name="app/Repository/*.php"
-
+```
+Alter the stored view model with name "app" based on the analysis with name "ticketing_tixets". Scope the view to the same nodes.
+```
 osmium view change --analysis-name="ticketing_tixets" --view-name="app" --node-name="app/Controller/*.php" --node-name="app/Service/*.php" --node-name="app/Repository/*.php"
-
+```
+Remove the stored view model with name "app" based on the analysis with name "ticketing_tixets" from the user home directory.
+```
 osmium view delete --analysis-name="ticketing_tixets" --view-name="app"
-
+```
+Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to the terminal.
+```
 osmium view terminal render --analysis-name="ticketing_tixets" --view-name="app"
-
+```
+Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to HTML file.
+```
 osmium view web-browser render --analysis-name="ticketing_tixets" --view-name="app"
-
+```
+Start serving the rendered to HTML file view model with name "app" based on the analysis with name "ticketing_tixets".
+```
 osmium view web-browser listen --analysis-name="ticketing_tixets" --view-name="app"
-
+```
+Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to CSV file.
+```
 osmium view csv render --analysis-name="ticketing_tixets" --view-name="app"
 ```
