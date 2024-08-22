@@ -36,7 +36,7 @@ func NewChangeViewCommand(handler *view.ChangeViewHandler) *cobra.Command {
 		},
 	}
 
-	command.Flags().StringArray("node-name", []string{}, "Names of the nodes")
+	command.Flags().StringArrayP("node-name", "nn", []string{}, "Names of the nodes")
 	viper.BindPFlag("nodenames", command.Flags().Lookup("node-name"))
 
 	return command
