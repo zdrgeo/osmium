@@ -41,6 +41,11 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 
 	nodeNames := view.NodeNames[sinceIndex:untilIndex]
 
+	const edgeSinceIndex = 40
+	const edgeUntilIndex = 80
+
+	edgeNodeNames := view.NodeNames[edgeSinceIndex:edgeUntilIndex]
+
 	fmt.Printf("Analysis: %s\n", view.Name)
 
 	spanView := view.SpanViews[spanName]
@@ -50,20 +55,20 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 	fmt.Print("\n")
 
 	fmt.Print("   ")
-	for nodeIndex := range nodeNames {
-		fmt.Printf("%2d ", sinceIndex+nodeIndex)
+	for nodeIndex := range edgeNodeNames {
+		fmt.Printf("%2d ", edgeSinceIndex+nodeIndex)
 	}
 	fmt.Print("\n")
 
 	fmt.Print("  ┌")
-	for i := 0; i < len(nodeNames)-1; i++ {
+	for i := 0; i < len(edgeNodeNames)-1; i++ {
 		fmt.Print("──┬")
 		// fmt.Printf("%.*s┬", 2, "──────────")
 	}
 	fmt.Print("──┐\n")
-	for nodeIndex, nodeName := range nodeNames {
+	for nodeIndex := range nodeNames {
 		fmt.Printf("%2d ", sinceIndex+nodeIndex)
-		for edgeNodeIndex := range nodeNames {
+		for edgeNodeIndex := range edgeNodeNames {
 			if nodeIndex != edgeNodeIndex {
 				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[nodeIndex][edgeNodeIndex]), spanView.Values[nodeIndex][edgeNodeIndex])
 			} else {
@@ -72,17 +77,25 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 				fmt.Print("▒▒ ")
 			}
 		}
-		fmt.Printf("%2d %s\n", sinceIndex+nodeIndex, nodeName)
+		fmt.Printf("%2d\n", sinceIndex+nodeIndex)
 	}
 	fmt.Print("  └")
-	for i := 0; i < len(nodeNames)-1; i++ {
+	for i := 0; i < len(edgeNodeNames)-1; i++ {
 		fmt.Print("──┴")
 	}
 	fmt.Print("──┘\n")
 
 	fmt.Print("   ")
-	for nodeIndex := range nodeNames {
-		fmt.Printf("%2d ", sinceIndex+nodeIndex)
+	for nodeIndex := range edgeNodeNames {
+		fmt.Printf("%2d ", edgeSinceIndex+nodeIndex)
 	}
 	fmt.Print("\n")
+
+	for nodeIndex, nodeName := range nodeNames {
+		fmt.Printf("%2d %s\n", sinceIndex+nodeIndex, nodeName)
+	}
+
+	for edgeNodeIndex, edgeNodeName := range edgeNodeNames {
+		fmt.Printf("%2d %s\n", edgeSinceIndex+edgeNodeIndex, edgeNodeName)
+	}
 }
