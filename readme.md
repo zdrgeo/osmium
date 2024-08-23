@@ -101,31 +101,29 @@ osmium analysis create
     --analysis-name -an
     --source -s {github:pullrequest, git:commit}
     [--source-option -so]
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
+| --source-option -so | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
 
+```
 osmium analysis change
     --analysis-name -an
     --source -s {github:pullrequest, git:commit}
     [--source-option -so]
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
+| --source-option -so | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
 
+```
 osmium analysis delete
     --analysis-name -an
 ```
-
-`osmiumm analysis create`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
-| --source-option -so | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
-
-`osmiumm analysis change`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
-| --source-option -so | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
-
-`osmiumm analysis delete`
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
 | --analysis-name -an | | | Name of the analysis. |
@@ -139,6 +137,7 @@ osmium analysis create \
     --source="github:pullrequest" \
     --source-option="repository-owner=scaleforce,repository-name=tixets"
 ```
+
 Alter the stored analysis model with name "ticketing_tixets". Use the same GitHub repository with owner "scaleforce" and name "tixets" as a source.
 ```
 osmium analysis change \
@@ -146,6 +145,7 @@ osmium analysis change \
     --source="github:pullrequest" \
     --ßsource-option="repository-owner=scaleforce,repository-name=tixets"
 ```
+
 Remove the stored analysis model with name "ticketing_tixets" from the user home directory.
 ```
 osmium analysis delete \
@@ -159,72 +159,70 @@ osmium view create
     --analysis-name -an
     --view-name -vn
     [--node-name -nn]
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --view-name -an | | | Name of the view. |
+| --node-name -nn | | Yes | Names of the nodes. |
 
+```
 osmium view change
     --analysis-name -an
     --view-name -vn
     [--node-name -nn]
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --view-name -an | | | Name of the view. |
+| --node-name -nn | | Yes | Names of the nodes. |
 
+```
 osmium view delete
     --analysis-name -an
     --view-name -vn
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --view-name -an | | | Name of the view. |
 
+```
 osmium view terminal render
     --analysis-name -an
     --view-name -vn
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --view-name -an | | | Name of the view. |
 
+```
 osmium view web-browser render
     --analysis-name -an
     --view-name -vn
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --view-name -an | | | Name of the view. |
 
+```
 osmium view web-browser listen
     --analysis-name -an
     --view-name -vn
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -an | | | Name of the analysis. |
+| --view-name -an | | | Name of the view. |
 
+```
 osmium view csv render
     --analysis-name -an
     --view-name -vn
 ```
-
-`osmiumm view create`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-| --node-name -nn | | Yes | Names of the nodes. |
-
-`osmiumm view change`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-| --node-name -nn | | Yes | Names of the nodes. |
-
-`osmiumm view delete`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-
-`osmium view terminal render`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-
-`osmium view web-browser render`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-
-`osmium view web-browser listen`
-| Parameter | Default | Optional | Description |
-|--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-
-`osmium view csv render`
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
 | --analysis-name -an | | | Name of the analysis. |
@@ -241,6 +239,7 @@ osmium view create \
     --node-name="app/Service/*.php" \
     --node-name="app/Repository/*.php"
 ```
+
 Alter the stored view model with name "app" based on the analysis with name "ticketing_tixets". Scope the view to the same nodes.
 ```
 osmium view change \
@@ -250,30 +249,35 @@ osmium view change \
     --node-name="app/Service/*.php" \
     --node-name="app/Repository/*.php"
 ```
+
 Remove the stored view model with name "app" based on the analysis with name "ticketing_tixets" from the user home directory.
 ```
 osmium view delete \
     --analysis-name="ticketing_tixets" \
     --view-name="app"
 ```
+
 Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to the terminal.
 ```
 osmium view terminal render \
     --analysis-name="ticketing_tixets" \
     --view-name="app"
 ```
+
 Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to HTML file.
 ```
 osmium view web-browser render \
     --analysis-name="ticketing_tixets" \
     --view-name="app"
 ```
+
 Start serving the rendered to HTML file view model with name "app" based on the analysis with name "ticketing_tixets".
 ```
 osmium view web-browser listen \
     --analysis-name="ticketing_tixets" \
     --view-name="app"
 ```
+
 Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to CSV file.
 ```
 osmium view csv render \
