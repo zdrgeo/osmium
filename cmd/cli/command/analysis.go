@@ -12,7 +12,7 @@ func NewAnalysisCommand(createAnalysisCommand, changeAnalysisCommand, deleteAnal
 		Long:  `Analysis.`,
 	}
 
-	command.PersistentFlags().StringP("analysis-name", "an", "", "Name of the analysis")
+	command.PersistentFlags().StringP("analysis-name", "a", "", "Name of the analysis")
 	command.MarkPersistentFlagRequired("analysis-name")
 	viper.BindPFlag("analysisname", command.PersistentFlags().Lookup("analysis-name"))
 

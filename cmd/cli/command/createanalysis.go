@@ -42,7 +42,7 @@ func NewCreateAnalysisCommand(handler *analysis.CreateAnalysisHandler) *cobra.Co
 	viper.BindPFlag("source", command.Flags().Lookup("source"))
 	viper.SetDefault("source", "github:pullrequest")
 
-	command.Flags().StringToStringP("source-option", "so", map[string]string{}, "Options of the source")
+	command.Flags().StringToStringP("source-option", "o", map[string]string{}, "Options of the source")
 	viper.BindPFlag("sourceoptions", command.Flags().Lookup("source-option"))
 
 	return command

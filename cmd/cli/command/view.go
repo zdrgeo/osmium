@@ -12,10 +12,10 @@ func NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, ter
 		Long:  `View.`,
 	}
 
-	command.PersistentFlags().StringP("analysis-name", "an", "", "Name of the analysis")
+	command.PersistentFlags().StringP("analysis-name", "a", "", "Name of the analysis")
 	command.MarkPersistentFlagRequired("analysis-name")
 	viper.BindPFlag("analysisname", command.PersistentFlags().Lookup("analysis-name"))
-	command.PersistentFlags().StringP("view-name", "vn", "", "Name of the view")
+	command.PersistentFlags().StringP("view-name", "v", "", "Name of the view")
 	command.MarkPersistentFlagRequired("view-name")
 	viper.BindPFlag("viewname", command.PersistentFlags().Lookup("view-name"))
 

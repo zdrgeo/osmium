@@ -98,35 +98,35 @@ GITHUB_TOKEN=
 
 ```
 osmium analysis create
-    --analysis-name -an
+    --analysis-name -a
     --source -s {github:pullrequest, git:commit}
-    [--source-option -so]
+    [--source-option -o]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
+| --analysis-name -a | | | Name of the analysis. |
 | --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
-| --source-option -so | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
+| --source-option -o | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
 
 ```
 osmium analysis change
-    --analysis-name -an
+    --analysis-name -a
     --source -s {github:pullrequest, git:commit}
-    [--source-option -so]
+    [--source-option -o]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
+| --analysis-name -a | | | Name of the analysis. |
 | --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
-| --source-option -so | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
+| --source-option -o | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
 
 ```
 osmium analysis delete
-    --analysis-name -an
+    --analysis-name -a
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
+| --analysis-name -a | | | Name of the analysis. |
 
 #### Examples
 
@@ -156,77 +156,77 @@ osmium analysis delete \
 
 ```
 osmium view create
-    --analysis-name -an
-    --view-name -vn
-    [--node-name -nn]
+    --analysis-name -a
+    --view-name -v
+    [--node-name -n]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-| --node-name -nn | | Yes | Names of the nodes. |
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view. |
+| --node-name -n | | Yes | Names of the nodes. |
 
 ```
 osmium view change
-    --analysis-name -an
-    --view-name -vn
-    [--node-name -nn]
+    --analysis-name -a
+    --view-name -v
+    [--node-name -n]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
-| --node-name -nn | | Yes | Names of the nodes. |
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view. |
+| --node-name -n | | Yes | Names of the nodes. |
 
 ```
 osmium view delete
-    --analysis-name -an
-    --view-name -vn
+    --analysis-name -a
+    --view-name -v
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view. |
 
 ```
 osmium view terminal render
-    --analysis-name -an
-    --view-name -vn
+    --analysis-name -a
+    --view-name -v
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view. |
 
 ```
 osmium view web-browser render
-    --analysis-name -an
-    --view-name -vn
+    --analysis-name -a
+    --view-name -v
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view. |
 
 ```
 osmium view web-browser listen
-    --analysis-name -an
-    --view-name -vn
+    --analysis-name -a
+    --view-name -v
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view. |
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view. |
 
 ```
 osmium view csv render
-    --analysis-name -an
-    --view-name -vn
+    --analysis-name -a
+    --view-name -v
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
-| --analysis-name -an | | | Name of the analysis. |
-| --view-name -an | | | Name of the view .|
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view .|
 
 #### Examples
 
