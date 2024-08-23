@@ -36,6 +36,11 @@ func valueColor(minValue, maxValue, value int) int {
 
 // https://www.w3.org/TR/xml-entity-names/025.html
 func renderViewToTerminal(view *AnalysisView, spanName string) {
+	const sinceIndex = 20
+	const untilIndex = 60
+
+	nodeNames := view.NodeNames[sinceIndex:untilIndex]
+
 	fmt.Printf("Analysis: %s\n", view.Name)
 
 	spanView := view.SpanViews[spanName]
@@ -45,20 +50,20 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 	fmt.Print("\n")
 
 	fmt.Print("   ")
-	for nodeIndex := range view.NodeNames {
-		fmt.Printf("%2d ", nodeIndex)
+	for nodeIndex := range nodeNames {
+		fmt.Printf("%2d ", sinceIndex+nodeIndex)
 	}
 	fmt.Print("\n")
 
 	fmt.Print("  ┌")
-	for i := 0; i < len(view.NodeNames)-1; i++ {
+	for i := 0; i < len(nodeNames)-1; i++ {
 		fmt.Print("──┬")
 		// fmt.Printf("%.*s┬", 2, "──────────")
 	}
 	fmt.Print("──┐\n")
-	for nodeIndex, nodeName := range view.NodeNames {
-		fmt.Printf("%2d ", nodeIndex)
-		for edgeNodeIndex := range view.NodeNames {
+	for nodeIndex, nodeName := range nodeNames {
+		fmt.Printf("%2d ", sinceIndex+nodeIndex)
+		for edgeNodeIndex := range nodeNames {
 			if nodeIndex != edgeNodeIndex {
 				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[nodeIndex][edgeNodeIndex]), spanView.Values[nodeIndex][edgeNodeIndex])
 			} else {
@@ -67,17 +72,17 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 				fmt.Print("▒▒ ")
 			}
 		}
-		fmt.Printf("%2d %s\n", nodeIndex, nodeName)
+		fmt.Printf("%2d %s\n", sinceIndex+nodeIndex, nodeName)
 	}
 	fmt.Print("  └")
-	for i := 0; i < len(view.NodeNames)-1; i++ {
+	for i := 0; i < len(nodeNames)-1; i++ {
 		fmt.Print("──┴")
 	}
 	fmt.Print("──┘\n")
 
 	fmt.Print("   ")
-	for nodeIndex := range view.NodeNames {
-		fmt.Printf("%2d ", nodeIndex)
+	for nodeIndex := range nodeNames {
+		fmt.Printf("%2d ", sinceIndex+nodeIndex)
 	}
 	fmt.Print("\n")
 }
