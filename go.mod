@@ -1,6 +1,6 @@
 module github.com/zdrgeo/osmium
 
-go 1.22.5
+go 1.23.0
 
 require (
 	github.com/cli/go-gh/v2 v2.9.0
