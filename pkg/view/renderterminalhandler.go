@@ -2,6 +2,8 @@ package view
 
 import (
 	"fmt"
+	"os"
+	"text/tabwriter"
 )
 
 type RenderTerminalHandler struct {
@@ -36,38 +38,34 @@ func valueColor(minValue, maxValue, value int) int {
 
 // https://www.w3.org/TR/xml-entity-names/025.html
 func renderViewToTerminal(view *AnalysisView, spanName string) {
-	const sinceIndex = 20
-	const untilIndex = 60
+	const nodeStartIndex = 0
+	const edgeNodeStartIndex = 0
 
-	nodeNames := view.NodeNames[sinceIndex:untilIndex]
+	const count = 25
 
-	const edgeSinceIndex = 40
-	const edgeUntilIndex = 80
-
-	edgeNodeNames := view.NodeNames[edgeSinceIndex:edgeUntilIndex]
-
-	fmt.Printf("Analysis: %s\n", view.Name)
+	nodeNames := view.NodeNames[nodeStartIndex : nodeStartIndex+count]
+	edgeNodeNames := view.NodeNames[edgeNodeStartIndex : edgeNodeStartIndex+count]
 
 	spanView := view.SpanViews[spanName]
 
+	fmt.Printf("Analysis: %s\n", view.Name)
 	fmt.Printf("Span: %s\n", spanView.Name)
 
-	fmt.Print("\n")
+	fmt.Println()
 
 	fmt.Print("   ")
-	for nodeIndex := range edgeNodeNames {
-		fmt.Printf("%2d ", edgeSinceIndex+nodeIndex)
+	for edgeNodeIndex := range edgeNodeNames {
+		fmt.Printf("%2d ", edgeNodeIndex)
 	}
-	fmt.Print("\n")
+	fmt.Println()
 
 	fmt.Print("  ┌")
-	for i := 0; i < len(edgeNodeNames)-1; i++ {
+	for range len(edgeNodeNames) - 1 {
 		fmt.Print("──┬")
-		// fmt.Printf("%.*s┬", 2, "──────────")
 	}
-	fmt.Print("──┐\n")
+	fmt.Println("──┐")
 	for nodeIndex := range nodeNames {
-		fmt.Printf("%2d ", sinceIndex+nodeIndex)
+		fmt.Printf("%2d ", nodeIndex)
 		for edgeNodeIndex := range edgeNodeNames {
 			if nodeIndex != edgeNodeIndex {
 				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[nodeIndex][edgeNodeIndex]), spanView.Values[nodeIndex][edgeNodeIndex])
@@ -77,25 +75,29 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 				fmt.Print("▒▒ ")
 			}
 		}
-		fmt.Printf("%2d\n", sinceIndex+nodeIndex)
+		fmt.Printf("%2d\n", nodeIndex)
 	}
 	fmt.Print("  └")
-	for i := 0; i < len(edgeNodeNames)-1; i++ {
+	for range len(edgeNodeNames) - 1 {
 		fmt.Print("──┴")
 	}
-	fmt.Print("──┘\n")
+	fmt.Println("──┘")
 
 	fmt.Print("   ")
-	for nodeIndex := range edgeNodeNames {
-		fmt.Printf("%2d ", edgeSinceIndex+nodeIndex)
+	for edgeNodeIndex := range edgeNodeNames {
+		fmt.Printf("%2d ", edgeNodeIndex)
 	}
-	fmt.Print("\n")
+	fmt.Println()
 
-	for nodeIndex, nodeName := range nodeNames {
-		fmt.Printf("%2d %s\n", sinceIndex+nodeIndex, nodeName)
+	fmt.Println()
+
+	writer := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
+
+	fmt.Fprintf(writer, "   Nodes (%d - %d)\t   Edge Nodes (%d - %d)\n", nodeStartIndex, nodeStartIndex+count, edgeNodeStartIndex, edgeNodeStartIndex+count)
+
+	for index := range count {
+		fmt.Fprintf(writer, "%2d (%d) %s\t%2d (%d) %s\n", index, nodeStartIndex+index, nodeNames[index], index, edgeNodeStartIndex+index, edgeNodeNames[index])
 	}
 
-	for edgeNodeIndex, edgeNodeName := range edgeNodeNames {
-		fmt.Printf("%2d %s\n", edgeSinceIndex+edgeNodeIndex, edgeNodeName)
-	}
+	writer.Flush()
 }
