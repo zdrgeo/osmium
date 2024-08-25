@@ -18,24 +18,16 @@ Analysis View in web browser
 
 ## Quick start
 
+Analyse [Dapr](https://github.com/dapr/dapr) GitHub repository. Store the generated analysis model to the user home directory under the name "dapr". Be patient - this operation may take several minutes to complete.
 ```
-osmium analysis create \
-    --analysis-name="eShop" \
-    --source="github:pullrequest" \
-    --source-option="repository-owner=dotnet,repository-name=eShop"
-
 osmium analysis create \
     --analysis-name="dapr" \
     --source="github:pullrequest" \
     --source-option="repository-owner=dapr,repository-name=dapr"
 ```
 
+Generate a view scoped to the "\*.proto" files in the "dapr" directory and the "\*.go" files in the "cmd", "pkg" and "utils" directories. Store the generated view model to the user home directory under the name "dapr".
 ```
-osmium view create \
-    --analysis-name="eShop" \
-    --view-name="src" \
-    --node-name="^src(/[^/]+)*/[^/]+\.cs$"
-
 osmium view create \
     --analysis-name="dapr" \
     --view-name="dapr" \
@@ -45,15 +37,8 @@ osmium view create \
     --node-name="^utils(/[^/]+)*/[^/]+\.go$"
 ```
 
+Render the view to web browser. 
 ```
-osmium view web-browser render \
-    --analysis-name="eShop" \
-    --view-name="src"
-
-osmium view web-browser listen \
-    --analysis-name="eShop" \
-    --view-name="src"
-
 osmium view web-browser render \
     --analysis-name="dapr" \
     --view-name="dapr"
@@ -242,7 +227,7 @@ osmium view csv render
 
 #### Examples
 
-Geterate a view model based on the analysis with name "ticketing_tixets". Store the generated view model to the user home directory under the name "app". Scope the view model to nodes with names that match any of the the file paths "app/Controller/\*.php", "app/Service/\*.php" or "app/Repository/\*.php".
+Generate a view model based on the analysis with name "ticketing_tixets". Store the generated view model to the user home directory under the name "app". Scope the view model to nodes with names that match any of the the file paths "app/Controller/\*.php", "app/Service/\*.php" or "app/Repository/\*.php".
 ```
 osmium view create \
     --analysis-name="ticketing_tixets" \
