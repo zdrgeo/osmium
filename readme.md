@@ -4,17 +4,15 @@ This is a prototype tool for exploring the dependencies between elements in a so
 
 ## Overview
 
-Osmium uses the DSM ([Design Structure Matrix](https://en.wikipedia.org/wiki/Design_structure_matrix)) methods to measure and visualize the cohession between files in a GitHub repository by tracking how often these files have been changed together in a logical units like Git commits or GitHub pull requests.
-It is implemented as a CLI application with commands for generating analyses and building different views (presentations) on them.
-It is also available as a [GitHub CLI extension](https://github.com/zdrgeo/gh-osmium).
+Osmium uses the DSM ([Design Structure Matrix](https://en.wikipedia.org/wiki/Design_structure_matrix)) methods to measure and visualize the cohession between files in a GitHub repository by tracking how often these files were changed together in a logical units like Git commits or GitHub pull requests. Each number in the matrix represents the number of times the X-axis file was changed along with the Y-axis file in the same commit or pull request. Osmium is implemented as a CLI application with commands for generating analyses and building different views (presentations) on them. It is also available as a [GitHub CLI extension](https://github.com/zdrgeo/gh-osmium).
 
 Analysis View in terminal
 
-![Analysis View in Terminal](./analysisview_terminal.png)
+![Analysis View in Terminal](./analysis_view_terminal.png)
 
 Analysis View in web browser
 
-![Analysis View in Web Browser](./analysisview_webbrowser.png)
+![Analysis View in Web Browser](./analysis_view_web_browser.png)
 
 ## Quick start
 
@@ -37,16 +35,47 @@ osmium view create \
     --node-name="^utils(/[^/]+)*/[^/]+\.go$"
 ```
 
-Render the view to web browser. 
+Render to the terminal a "window" of the first 30 files of the view.
+```
+osmium view terminal render \
+    --analysis-name="dapr" \
+    --view-name="dapr" \
+    --node-count=30
+```
+![Quick Start Analysis View in Terminal (Start: 0, Count: 30)](./quick_start_analysis_view_terminal_0_30.png)
+
+Render to the terminal a "window" of 30 files of the view offseted 10 files to the right on the X axis. This allows for "scrolling" of the view, which often contains more files than can be displayed at once in the terminal.
+```
+osmium view terminal render \
+    --analysis-name="dapr" \
+    --view-name="dapr" \
+    --x-node-start=10
+    --node-count=30
+```
+![Quick Start Analysis View in Terminal (Start: 10, Count: 30)](./quick_start_analysis_view_terminal_10_30.png)
+
+Generate another view scoped only to the "\*.proto" files in the "dapr" directory. Store the generated view model to the user home directory under the name "api".
+```
+osmium view create \
+    --analysis-name="dapr" \
+    --view-name="api" \
+    --node-name="^dapr(/[^/]+)*/[^/]+\.proto$"
+```
+
+Render to an HTML file the whole view and start listening for HTTP requests.
 ```
 osmium view web-browser render \
     --analysis-name="dapr" \
-    --view-name="dapr"
+    --view-name="api"
 
 osmium view web-browser listen \
     --analysis-name="dapr" \
-    --view-name="dapr"
+    --view-name="api"
 ```
+
+Open [http://localhost:3000/view.html](http://localhost:3000/view.html) in a web browser.
+
+![Quick Start Analysis View in Web Browser](./quick_start_analysis_view_web_browser.png)
 
 ## Concepts
 
