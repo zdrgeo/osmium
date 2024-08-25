@@ -85,18 +85,14 @@ Open [http://localhost:3000/view.html](http://localhost:3000/view.html) in a web
 - Nodes and Edges
 - Views
 
-The data model can be built based on data from various sources.
-When GitHub Pull Request source is used, Osmium iterates over all pull requests.
-When Git Commit source is used, Osmium iterates over all commits.
+The data model can be built based on data from various sources. When GitHub Pull Request source is used, Osmium iterates over all pull requests. When Git Commit source is used, Osmium iterates over all commits.
 
 ## Usage
 
 ### Workflow
 
 Osmium's workflow is organized into three stages: generate an analysis, generate at least one view of the analysis, explore the views.
-The output of each stage is persisted and can be used mutiple times as input for the next stage.
-This enables iterative style of work - each stage can be repeated with the same input, but with different parameters to produce differenet outputs for the next stage.
-This also helps with time- and resource-intensive stages such as the analysis generation, where multiple API calls (which may also be subject of rate limits) are often required to obtain the necessary historical data from the source.
+The output of each stage is persisted and can be used mutiple times as input for the next stage. This enables iterative style of work - each stage can be repeated with the same input, but with different parameters to produce differenet outputs for the next stage. This also helps with time- and resource-intensive stages such as the analysis generation, where multiple API calls (which may also be subject of rate limits) are often required to obtain the necessary historical data from the source.
 
 ### Configuration
 
