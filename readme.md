@@ -193,8 +193,8 @@ osmium view terminal render
     --analysis-name -a
     --view-name -v
     --span-name -s
-    --node-start
-    --edge-node-start
+    --x-node-start
+    --y-node-start
     --node-count
 ```
 | Parameter | Default | Optional | Description |
@@ -202,8 +202,8 @@ osmium view terminal render
 | --analysis-name -a | | | Name of the analysis. |
 | --view-name -v | | | Name of the view. |
 | --span-name -s | | | Name of the span. |
-| --node-start | | | Start of the nodes. |
-| --edge-node-start | | | Start of the edge nodes. |
+| --x-node-start | | | Start of the X nodes. |
+| --y-node-start | | | Start of the Y nodes. |
 | --node-count | | | Count of the nodes. |
 
 ```
@@ -274,8 +274,8 @@ Render the stored view model with name "app" based on the analysis with name "ti
 osmium view terminal render \
     --analysis-name="ticketing_tixets" \
     --view-name="app"
-    --node-start=20
-    --edge-node-start=80
+    --x-node-start=80
+    --y-node-start=20
     --node-count=40
 ```
 

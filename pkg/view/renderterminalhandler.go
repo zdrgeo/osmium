@@ -37,29 +37,29 @@ func valueColor(minValue, maxValue, value int) int {
 }
 
 // https://www.w3.org/TR/xml-entity-names/025.html
-func renderViewToTerminal(view *AnalysisView, spanName string, nodeStart, edgeNodeStart, nodeCount int) {
+func renderViewToTerminal(view *AnalysisView, spanName string, xNodeStart, yNodeStart, nodeCount int) {
 	if nodeCount < 0 || nodeCount > 100 || nodeCount > len(view.NodeNames) {
 		nodeCount = len(view.NodeNames)
 	}
 
-	if nodeStart < 0 {
-		nodeStart = 0
+	if xNodeStart < 0 {
+		xNodeStart = 0
 	}
 
-	if nodeStart+nodeCount > len(view.NodeNames)-1 {
-		nodeStart = len(view.NodeNames) - 1 - nodeCount
+	if xNodeStart+nodeCount > len(view.NodeNames)-1 {
+		xNodeStart = len(view.NodeNames) - 1 - nodeCount
 	}
 
-	if edgeNodeStart < 0 {
-		edgeNodeStart = 0
+	if yNodeStart < 0 {
+		yNodeStart = 0
 	}
 
-	if edgeNodeStart+nodeCount > len(view.NodeNames)-1 {
-		edgeNodeStart = len(view.NodeNames) - 1 - nodeCount
+	if yNodeStart+nodeCount > len(view.NodeNames)-1 {
+		yNodeStart = len(view.NodeNames) - 1 - nodeCount
 	}
 
-	nodeNames := view.NodeNames[nodeStart : nodeStart+nodeCount]
-	edgeNodeNames := view.NodeNames[edgeNodeStart : edgeNodeStart+nodeCount]
+	yNodeNames := view.NodeNames[yNodeStart : yNodeStart+nodeCount]
+	xNodeNames := view.NodeNames[xNodeStart : xNodeStart+nodeCount]
 
 	spanView := view.SpanViews[spanName]
 
@@ -69,38 +69,38 @@ func renderViewToTerminal(view *AnalysisView, spanName string, nodeStart, edgeNo
 	fmt.Println()
 
 	fmt.Print("   ")
-	for edgeNodeIndex := range edgeNodeNames {
-		fmt.Printf("%2d ", edgeNodeIndex)
+	for xNodeIndex := range xNodeNames {
+		fmt.Printf("%2d ", xNodeIndex)
 	}
 	fmt.Println()
 
 	fmt.Print("  ┌")
-	for range len(edgeNodeNames) - 1 {
+	for range len(xNodeNames) - 1 {
 		fmt.Print("──┬")
 	}
 	fmt.Println("──┐")
-	for nodeIndex := range nodeNames {
-		fmt.Printf("%2d ", nodeIndex)
-		for edgeNodeIndex := range edgeNodeNames {
-			if nodeStart+nodeIndex != edgeNodeStart+edgeNodeIndex {
-				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex]), spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex])
+	for yNodeIndex := range yNodeNames {
+		fmt.Printf("%2d ", yNodeIndex)
+		for xNodeIndex := range xNodeNames {
+			if xNodeStart+xNodeIndex != yNodeStart+yNodeIndex {
+				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex]), spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
 			} else {
-				// fmt.Printf("%2d ", spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex])
-				// fmt.Printf("\033[7m%2d\033[0m ", spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex])
+				// fmt.Printf("%2d ", spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
+				// fmt.Printf("\033[7m%2d\033[0m ", spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
 				fmt.Print("▒▒ ")
 			}
 		}
-		fmt.Printf("%2d\n", nodeIndex)
+		fmt.Printf("%2d\n", yNodeIndex)
 	}
 	fmt.Print("  └")
-	for range len(edgeNodeNames) - 1 {
+	for range len(xNodeNames) - 1 {
 		fmt.Print("──┴")
 	}
 	fmt.Println("──┘")
 
 	fmt.Print("   ")
-	for edgeNodeIndex := range edgeNodeNames {
-		fmt.Printf("%2d ", edgeNodeIndex)
+	for xNodeIndex := range xNodeNames {
+		fmt.Printf("%2d ", xNodeIndex)
 	}
 	fmt.Println()
 
@@ -108,10 +108,10 @@ func renderViewToTerminal(view *AnalysisView, spanName string, nodeStart, edgeNo
 
 	writer := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
 
-	fmt.Fprintf(writer, "\tNodes (%d - %d)\t\tEdge Nodes (%d - %d)\n", nodeStart, nodeStart+nodeCount, edgeNodeStart, edgeNodeStart+nodeCount)
+	fmt.Fprintf(writer, "\tY Nodes (%d - %d)\t\tX Nodes (%d - %d)\n", yNodeStart, yNodeStart+nodeCount, xNodeStart, xNodeStart+nodeCount)
 
 	for nodeIndex := range nodeCount {
-		fmt.Fprintf(writer, "%2d\t(%d) %s\t%2d\t(%d) %s\n", nodeIndex, nodeStart+nodeIndex, nodeNames[nodeIndex], nodeIndex, edgeNodeStart+nodeIndex, edgeNodeNames[nodeIndex])
+		fmt.Fprintf(writer, "%2d\t(%d) %s\t%2d\t(%d) %s\n", nodeIndex, yNodeStart+nodeIndex, yNodeNames[nodeIndex], nodeIndex, xNodeStart+nodeIndex, xNodeNames[nodeIndex])
 	}
 
 	writer.Flush()

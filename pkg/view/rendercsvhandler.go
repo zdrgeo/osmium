@@ -51,12 +51,12 @@ func renderViewToCSVFile(view *AnalysisView, spanName, fileName string) {
 
 	defer file.Close()
 
-	fmt.Fprint(file, "SpanName,NodeIndex,NodeName,EdgeNodeIndex,EdgeNodeName,Value\n")
+	fmt.Fprint(file, "SpanName,YNodeIndex,YNodeName,XNodeIndex,XNodeName,Value\n")
 
 	for spanName, spanView := range view.SpanViews {
-		for nodeIndex, nodeName := range view.NodeNames {
-			for edgeNodeIndex, edgeNodeName := range view.NodeNames {
-				fmt.Fprintf(file, "%s,%d,%s,%d,%s,%d\n", spanName, nodeIndex, nodeName, edgeNodeIndex, edgeNodeName, spanView.Values[nodeIndex][edgeNodeIndex])
+		for yNodeIndex, yNodeName := range view.NodeNames {
+			for xNodeIndex, xNodeName := range view.NodeNames {
+				fmt.Fprintf(file, "%s,%d,%s,%d,%s,%d\n", spanName, yNodeIndex, yNodeName, xNodeIndex, xNodeName, spanView.Values[yNodeIndex][xNodeIndex])
 			}
 		}
 	}

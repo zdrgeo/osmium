@@ -31,31 +31,31 @@ func NewRenderTerminalCommand(handler *view.RenderTerminalHandler) *cobra.Comman
 				fmt.Printf("Error retrieving span name: %s\n", err.Error())
 			}
 
-			nodeStart, err := cmd.Flags().GetInt("node-start")
+			xNodeStart, err := cmd.Flags().GetInt("x-node-start")
 
 			if err != nil {
-				fmt.Printf("Error retrieving nodes start: %s\n", err.Error())
+				fmt.Printf("Error retrieving X node start: %s\n", err.Error())
 			}
 
-			edgeNodeStart, err := cmd.Flags().GetInt("edge-node-start")
+			yNodeStart, err := cmd.Flags().GetInt("y-node-start")
 
 			if err != nil {
-				fmt.Printf("Error retrieving edge nodes start: %s\n", err.Error())
+				fmt.Printf("Error retrieving Y node start: %s\n", err.Error())
 			}
 
 			nodeCount, err := cmd.Flags().GetInt("node-count")
 
 			if err != nil {
-				fmt.Printf("Error retrieving nodes count: %s\n", err.Error())
+				fmt.Printf("Error retrieving node count: %s\n", err.Error())
 			}
 
-			handler.RenderTerminal(analysisName, viewName, spanName, nodeStart, edgeNodeStart, nodeCount)
+			handler.RenderTerminal(analysisName, viewName, spanName, xNodeStart, yNodeStart, nodeCount)
 		},
 	}
 
 	command.Flags().StringP("span-name", "s", "", "Name of the span")
-	command.Flags().Int("node-start", 0, "Start of the nodes")
-	command.Flags().Int("edge-node-start", 0, "Start of the edge nodes")
+	command.Flags().Int("x-node-start", 0, "Start of the X nodes")
+	command.Flags().Int("y-node-start", 0, "Start of the Y nodes")
 	command.Flags().Int("node-count", 100, "Count of the nodes")
 
 	return command

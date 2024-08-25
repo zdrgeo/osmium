@@ -61,9 +61,9 @@ func renderViewToPNGFile(view *AnalysisView, spanName, fileName string) {
 	// create a red rectangle atop the green surface
 	draw.Draw(myimage, red_rect, &image.Uniform{myred}, image.Point{}, draw.Src)
 
-	for nodeIndex := range view.NodeNames {
-		for edgeNodeIndex := range view.NodeNames {
-			fmt.Printf("%d,%d,%d\n", nodeIndex, edgeNodeIndex, spanView.Values[nodeIndex][edgeNodeIndex])
+	for yNodeIndex := range view.NodeNames {
+		for xNodeIndex := range view.NodeNames {
+			fmt.Printf("%d,%d,%d\n", xNodeIndex, xNodeIndex, spanView.Values[yNodeIndex][xNodeIndex])
 			red_rect := image.Rect(20, 80, 120, 160) //  geometry of 2nd rectangle which we draw atop above rectangle
 			myred := color.RGBA{200, 0, 0, 255}
 			draw.Draw(myimage, red_rect, &image.Uniform{myred}, image.Point{}, draw.Src)
