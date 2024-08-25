@@ -14,10 +14,10 @@ func NewRenderTerminalHandler(repository ViewRepository) *RenderTerminalHandler 
 	return &RenderTerminalHandler{repository: repository}
 }
 
-func (handler *RenderTerminalHandler) RenderTerminal(analysisName, name, spanName string) {
+func (handler *RenderTerminalHandler) RenderTerminal(analysisName, name, spanName string, nodeStart, edgeNodeStart, nodeCount int) {
 	view := handler.repository.Get(analysisName, name)
 
-	renderViewToTerminal(view, spanName)
+	renderViewToTerminal(view, spanName, nodeStart, edgeNodeStart, nodeCount)
 }
 
 var valueColors = map[int]int{
@@ -37,14 +37,21 @@ func valueColor(minValue, maxValue, value int) int {
 }
 
 // https://www.w3.org/TR/xml-entity-names/025.html
-func renderViewToTerminal(view *AnalysisView, spanName string) {
-	const nodeStartIndex = 0
-	const edgeNodeStartIndex = 0
+func renderViewToTerminal(view *AnalysisView, spanName string, nodeStart, edgeNodeStart, nodeCount int) {
+	if nodeStart < 0 || nodeStart > len(view.NodeNames)-1 {
+		nodeStart = 0
+	}
 
-	const count = 25
+	if edgeNodeStart < 0 || edgeNodeStart > len(view.NodeNames)-1 {
+		edgeNodeStart = 0
+	}
 
-	nodeNames := view.NodeNames[nodeStartIndex : nodeStartIndex+count]
-	edgeNodeNames := view.NodeNames[edgeNodeStartIndex : edgeNodeStartIndex+count]
+	if nodeCount < 0 || nodeCount > 100 || nodeCount > len(view.NodeNames) {
+		nodeCount = len(view.NodeNames)
+	}
+
+	nodeNames := view.NodeNames[nodeStart : nodeStart+nodeCount]
+	edgeNodeNames := view.NodeNames[edgeNodeStart : edgeNodeStart+nodeCount]
 
 	spanView := view.SpanViews[spanName]
 
@@ -67,11 +74,11 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 	for nodeIndex := range nodeNames {
 		fmt.Printf("%2d ", nodeIndex)
 		for edgeNodeIndex := range edgeNodeNames {
-			if nodeIndex != edgeNodeIndex {
-				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[nodeIndex][edgeNodeIndex]), spanView.Values[nodeIndex][edgeNodeIndex])
+			if nodeStart+nodeIndex != edgeNodeStart+edgeNodeIndex {
+				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex]), spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex])
 			} else {
-				// fmt.Printf("%2d ", spanView.Values[nodeIndex][edgeNodeIndex])
-				// fmt.Printf("\033[7m%2d\033[0m ", spanView.Values[nodeIndex][edgeNodeIndex])
+				// fmt.Printf("%2d ", spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex])
+				// fmt.Printf("\033[7m%2d\033[0m ", spanView.Values[nodeStart+nodeIndex][edgeNodeStart+edgeNodeIndex])
 				fmt.Print("▒▒ ")
 			}
 		}
@@ -93,10 +100,10 @@ func renderViewToTerminal(view *AnalysisView, spanName string) {
 
 	writer := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
 
-	fmt.Fprintf(writer, "   Nodes (%d - %d)\t   Edge Nodes (%d - %d)\n", nodeStartIndex, nodeStartIndex+count, edgeNodeStartIndex, edgeNodeStartIndex+count)
+	fmt.Fprintf(writer, "\tNodes (%d - %d)\t\tEdge Nodes (%d - %d)\n", nodeStart, nodeStart+nodeCount, edgeNodeStart, edgeNodeStart+nodeCount)
 
-	for index := range count {
-		fmt.Fprintf(writer, "%2d (%d) %s\t%2d (%d) %s\n", index, nodeStartIndex+index, nodeNames[index], index, edgeNodeStartIndex+index, edgeNodeNames[index])
+	for nodeIndex := range nodeCount {
+		fmt.Fprintf(writer, "%2d\t(%d) %s\t%2d\t(%d) %s\n", nodeIndex, nodeStart+nodeIndex, nodeNames[nodeIndex], nodeIndex, edgeNodeStart+nodeIndex, edgeNodeNames[nodeIndex])
 	}
 
 	writer.Flush()

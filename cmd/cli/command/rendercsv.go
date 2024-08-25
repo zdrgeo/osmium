@@ -35,7 +35,7 @@ func NewRenderCSVCommand(handler *view.RenderCSVHandler) *cobra.Command {
 		},
 	}
 
-	command.Flags().String("span-name", "", "Name of the span")
+	command.Flags().StringP("span-name", "s", "", "Name of the span")
 
 	return command
 }
