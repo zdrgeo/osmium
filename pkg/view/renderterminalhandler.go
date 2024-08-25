@@ -38,16 +38,24 @@ func valueColor(minValue, maxValue, value int) int {
 
 // https://www.w3.org/TR/xml-entity-names/025.html
 func renderViewToTerminal(view *AnalysisView, spanName string, nodeStart, edgeNodeStart, nodeCount int) {
-	if nodeStart < 0 || nodeStart > len(view.NodeNames)-1 {
+	if nodeCount < 0 || nodeCount > 100 || nodeCount > len(view.NodeNames) {
+		nodeCount = len(view.NodeNames)
+	}
+
+	if nodeStart < 0 {
 		nodeStart = 0
 	}
 
-	if edgeNodeStart < 0 || edgeNodeStart > len(view.NodeNames)-1 {
+	if nodeStart+nodeCount > len(view.NodeNames)-1 {
+		nodeStart = len(view.NodeNames) - 1 - nodeCount
+	}
+
+	if edgeNodeStart < 0 {
 		edgeNodeStart = 0
 	}
 
-	if nodeCount < 0 || nodeCount > 100 || nodeCount > len(view.NodeNames) {
-		nodeCount = len(view.NodeNames)
+	if edgeNodeStart+nodeCount > len(view.NodeNames)-1 {
+		edgeNodeStart = len(view.NodeNames) - 1 - nodeCount
 	}
 
 	nodeNames := view.NodeNames[nodeStart : nodeStart+nodeCount]
