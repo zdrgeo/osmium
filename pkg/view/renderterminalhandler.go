@@ -46,16 +46,16 @@ func renderViewToTerminal(view *AnalysisView, spanName string, xNodeStart, yNode
 		xNodeStart = 0
 	}
 
-	if xNodeStart+nodeCount > len(view.NodeNames)-1 {
-		xNodeStart = len(view.NodeNames) - 1 - nodeCount
+	if xNodeStart+nodeCount > len(view.NodeNames) {
+		xNodeStart = len(view.NodeNames) - nodeCount
 	}
 
 	if yNodeStart < 0 {
 		yNodeStart = 0
 	}
 
-	if yNodeStart+nodeCount > len(view.NodeNames)-1 {
-		yNodeStart = len(view.NodeNames) - 1 - nodeCount
+	if yNodeStart+nodeCount > len(view.NodeNames) {
+		yNodeStart = len(view.NodeNames) - nodeCount
 	}
 
 	yNodeNames := view.NodeNames[yNodeStart : yNodeStart+nodeCount]
