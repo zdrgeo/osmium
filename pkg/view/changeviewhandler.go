@@ -11,14 +11,12 @@ func NewChangeViewHandler(analysisRepository analysis.AnalysisRepository, reposi
 	return &ChangeViewHandler{analysisRepository: analysisRepository, repository: repository}
 }
 
-func (handler *ChangeViewHandler) ChangeView(analysisName, name string, nodeNames []string) {
+func (handler *ChangeViewHandler) ChangeView(analysisName, name string, nodeNames []string, builder string, builderOptions map[string]string) {
 	analysis := handler.analysisRepository.Get(analysisName)
 
-	// builder := &ViewBuilder{}
-	// builder := &FilePathViewBuilder{}
-	builder := &PatternViewBuilder{}
+	viewBuilder := viewBuilderFactory(builder, builderOptions)
 
-	view := builder.
+	view := viewBuilder.
 		WithNodeNames(nodeNames).
 		Build(analysis)
 

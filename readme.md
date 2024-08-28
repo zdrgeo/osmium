@@ -33,6 +33,7 @@ osmium view create \
     --node-name="^cmd(/[^/]+)*/[^/]+\.go$" \
     --node-name="^pkg(/[^/]+)*/[^/]+\.go$" \
     --node-name="^utils(/[^/]+)*/[^/]+\.go$"
+    --builder="pattern"
 ```
 
 Render to the terminal a "window" of the first 30 files of the view.
@@ -60,6 +61,7 @@ osmium view create \
     --analysis-name="dapr" \
     --view-name="api" \
     --node-name="^dapr(/[^/]+)*/[^/]+\.proto$"
+    --builder="pattern"
 ```
 
 Render to an HTML file the whole view and start listening for HTTP requests.
@@ -169,24 +171,32 @@ osmium view create
     --analysis-name -a
     --view-name -v
     [--node-name -n]
+    --builder -b {filepath, pattern}
+    [--builder-option -o]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
 | --analysis-name -a | | | Name of the analysis. |
 | --view-name -v | | | Name of the view. |
 | --node-name -n | | Yes | Names of the nodes. |
+| --builder -b | filepath | | Builder of the view - filepath or pattern. |
+| --builder-option -o | | Yes | Options of the builder. Reserved for future use. |
 
 ```
 osmium view change
     --analysis-name -a
     --view-name -v
     [--node-name -n]
+    --builder -b {filepath, pattern}
+    [--builder-option -o]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
 | --analysis-name -a | | | Name of the analysis. |
 | --view-name -v | | | Name of the view. |
 | --node-name -n | | Yes | Names of the nodes. |
+| --builder -b | filepath | | Builder of the view - filepath or pattern. |
+| --builder-option -o | | Yes | Options of the builder. Reserved for future use. |
 
 ```
 osmium view delete

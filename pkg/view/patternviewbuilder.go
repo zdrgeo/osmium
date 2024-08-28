@@ -10,10 +10,15 @@ import (
 )
 
 type PatternViewBuilder struct {
+	options   map[string]string
 	nodeNames []string
 }
 
-func (builder *PatternViewBuilder) WithNodeNames(nodeNames []string) *PatternViewBuilder {
+func NewPatternViewBuilder(options map[string]string) *PatternViewBuilder {
+	return &PatternViewBuilder{options: options}
+}
+
+func (builder *PatternViewBuilder) WithNodeNames(nodeNames []string) ViewBuilder {
 	builder.nodeNames = nodeNames
 
 	return builder

@@ -1,6 +1,8 @@
 package view
 
-import "github.com/zdrgeo/osmium/pkg/analysis"
+import (
+	"github.com/zdrgeo/osmium/pkg/analysis"
+)
 
 type CreateViewHandler struct {
 	analysisRepository analysis.AnalysisRepository
@@ -11,14 +13,12 @@ func NewCreateViewHandler(analysisRepository analysis.AnalysisRepository, reposi
 	return &CreateViewHandler{analysisRepository: analysisRepository, repository: repository}
 }
 
-func (handler *CreateViewHandler) CreateView(analysisName, name string, nodeNames []string) {
+func (handler *CreateViewHandler) CreateView(analysisName, name string, nodeNames []string, builder string, builderOptions map[string]string) {
 	analysis := handler.analysisRepository.Get(analysisName)
 
-	// builder := &ViewBuilder{}
-	// builder := &FilePathViewBuilder{}
-	builder := &PatternViewBuilder{}
+	viewBuilder := viewBuilderFactory(builder, builderOptions)
 
-	view := builder.
+	view := viewBuilder.
 		WithNodeNames(nodeNames).
 		Build(analysis)
 

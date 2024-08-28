@@ -10,10 +10,15 @@ import (
 )
 
 type FilePathViewBuilder struct {
-	ViewBuilder
+	options   map[string]string
+	nodeNames []string
 }
 
-func (builder *FilePathViewBuilder) WithNodeNames(nodeNames []string) *FilePathViewBuilder {
+func NewFilePathViewBuilder(options map[string]string) *FilePathViewBuilder {
+	return &FilePathViewBuilder{options: options}
+}
+
+func (builder *FilePathViewBuilder) WithNodeNames(nodeNames []string) ViewBuilder {
 	builder.nodeNames = nodeNames
 
 	return builder
