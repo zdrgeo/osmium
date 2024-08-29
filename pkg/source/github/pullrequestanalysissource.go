@@ -106,8 +106,9 @@ type (
 	}
 
 	files struct {
-		Nodes    []pullRequestChangedFile
-		PageInfo pageInfo
+		Nodes      []pullRequestChangedFile
+		PageInfo   pageInfo
+		TotalCount int
 	}
 
 	pullRequest struct {
@@ -119,8 +120,9 @@ type (
 	}
 
 	pullRequests struct {
-		Nodes    []pullRequest
-		PageInfo pageInfo
+		Nodes      []pullRequest
+		PageInfo   pageInfo
+		TotalCount int
 	}
 
 	repository struct {
