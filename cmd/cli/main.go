@@ -48,6 +48,7 @@ func main() {
 	renderWebBrowserHandler := view.NewRenderWebBrowserHandler(viewRepository)
 	listenWebBrowserHandler := view.NewListenWebBrowserHandler()
 	renderCSVHandler := view.NewRenderCSVHandler(viewRepository)
+	renderPNGHandler := view.NewRenderPNGHandler(viewRepository)
 
 	createAnalysisCommand := command.NewCreateAnalysisCommand(createAnalysisHandler)
 	changeAnalysisCommand := command.NewChangeAnalysisCommand(changeAnalysisHandler)
@@ -72,7 +73,11 @@ func main() {
 
 	csvCommand := command.NewCSVCommand(renderCSVCommand)
 
-	viewCommand := command.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, terminalCommand, webBrowserCommand, csvCommand)
+	renderPNGCommand := command.NewRenderPNGCommand(renderPNGHandler)
+
+	pngCommand := command.NewPNGCommand(renderPNGCommand)
+
+	viewCommand := command.NewViewCommand(createViewCommand, changeViewCommand, deleteViewCommand, terminalCommand, webBrowserCommand, csvCommand, pngCommand)
 
 	osmiumCommand := command.NewOsmiumCommand(analysisCommand, viewCommand)
 

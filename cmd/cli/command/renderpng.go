@@ -7,11 +7,11 @@ import (
 	"github.com/zdrgeo/osmium/pkg/view"
 )
 
-func NewRenderWebBrowserCommand(handler *view.RenderWebBrowserHandler) *cobra.Command {
+func NewRenderPNGCommand(handler *view.RenderPNGHandler) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "render",
-		Short: "Render web browser view",
-		Long:  `Render web browser view.`,
+		Short: "Render PNG view",
+		Long:  `Render PNG view.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			analysisName, err := cmd.Flags().GetString("analysis-name")
 
@@ -31,7 +31,7 @@ func NewRenderWebBrowserCommand(handler *view.RenderWebBrowserHandler) *cobra.Co
 				fmt.Printf("Error retrieving span name: %s\n", err.Error())
 			}
 
-			handler.RenderWebBrowser(analysisName, viewName, spanName)
+			handler.RenderPNG(analysisName, viewName, spanName)
 		},
 	}
 

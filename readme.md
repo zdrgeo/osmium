@@ -260,6 +260,18 @@ osmium view csv render
 | --view-name -v | | | Name of the view. |
 | --span-name -s | | | Name of the span. |
 
+```
+osmium view png render
+    --analysis-name -a
+    --view-name -v
+    --span-name -s
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -a | | | Name of the analysis. |
+| --view-name -v | | | Name of the view. |
+| --span-name -s | | | Name of the span. |
+
 #### Examples
 
 Generate a view model based on the analysis with name "ticketing_tixets". Store the generated view model to the user home directory under the name "app". Scope the view model to nodes with names that match any of the the file paths "app/Controller/\*.php", "app/Service/\*.php" or "app/Repository/\*.php".
@@ -316,6 +328,13 @@ osmium view web-browser listen \
 Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to CSV file.
 ```
 osmium view csv render \
+    --analysis-name="ticketing_tixets" \
+    --view-name="app"
+```
+
+Render the stored view model with name "app" based on the analysis with name "ticketing_tixets" to PNG file.
+```
+osmium view png render \
     --analysis-name="ticketing_tixets" \
     --view-name="app"
 ```

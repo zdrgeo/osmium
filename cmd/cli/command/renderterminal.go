@@ -10,8 +10,8 @@ import (
 func NewRenderTerminalCommand(handler *view.RenderTerminalHandler) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "render",
-		Short: "Render terminal",
-		Long:  `Render terminal.`,
+		Short: "Render terminal view",
+		Long:  `Render terminal view.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			analysisName, err := cmd.Flags().GetString("analysis-name")
 
