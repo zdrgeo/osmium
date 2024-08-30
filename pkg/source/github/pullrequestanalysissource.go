@@ -1,7 +1,6 @@
 package github
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -20,19 +19,7 @@ func NewPullRequestAnalysisSource(client *api.GraphQLClient) *PullRequestAnalysi
 	return &PullRequestAnalysisSource{client: client}
 }
 
-func (source *PullRequestAnalysisSource) Query(options map[string]string) (*analysis.Analysis, error) {
-	repositoryOwner, ok := options["repository-owner"]
-
-	if !ok {
-		return nil, errors.New("missing required source option repository-owner")
-	}
-
-	repositoryName, ok := options["repository-name"]
-
-	if !ok {
-		return nil, errors.New("missing required source option repository-name")
-	}
-
+func (source *PullRequestAnalysisSource) Query(repositoryOwner, repositoryName string) (*analysis.Analysis, error) {
 	pullRequests, err := source.getPullRequests(repositoryOwner, repositoryName)
 
 	if err != nil {

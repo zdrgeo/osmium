@@ -1,7 +1,6 @@
 package git
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -12,26 +11,13 @@ import (
 	"github.com/zdrgeo/osmium/pkg/analysis"
 )
 
-type CommitAnalysisSource struct {
-}
+type CommitAnalysisSource struct{}
 
 func NewCommitAnalysisSource() *CommitAnalysisSource {
 	return &CommitAnalysisSource{}
 }
 
-func (source *CommitAnalysisSource) Query(options map[string]string) (*analysis.Analysis, error) {
-	repositoryURL, ok := options["repository-url"]
-
-	if !ok {
-		return nil, errors.New("missing required source option repository-url")
-	}
-
-	repositoryPath, ok := options["repository-path"]
-
-	if !ok {
-		return nil, errors.New("missing required source option repository-path")
-	}
-
+func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) (*analysis.Analysis, error) {
 	cloneOptions := &git.CloneOptions{
 		URL:      repositoryURL,
 		Progress: os.Stdout,

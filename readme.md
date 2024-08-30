@@ -81,6 +81,11 @@ Open [http://localhost:3000/view.html](http://localhost:3000/view.html) in a web
 
 ## Concepts
 
+The approach taken in Osmium makes a few assumptions about the the codebase of the analysed software system.
+The first assumption is that the codebase is organized in the traditional way - different source files contain (and therefore correspond to) different elements. Osmium also requires that the changes to the source files are managed using a software configuration management system like Git or GitHub. Such systems keep historical data how the source files were changed and most importantly in what logical units of change. The second assumption is that...
+
+Osmium data model represents the analysed system elements and the dependencies between them in the form of undirected graph of nodes and edges. Osmium data model represents the analysed source files and the dependencies between them in the form of undirected graph of nodes and edges. Each node represents a file. Each edge represents an occuurence of change of two files together in a logical unit of change. Osmium uses Git commits or GitHub pull requests as logical units of change. The edges also track how many occuurences of change they represent - the number of commits or pull requests in which the two files were changes together. This number is used to quantify how strong the dependency is.
+
 - Analysis
 - Modules
 - Spans and Changes
