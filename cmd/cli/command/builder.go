@@ -6,7 +6,7 @@ type builder string
 
 const (
 	filepath builder = "filepath"
-	pattern  source  = "pattern"
+	pattern  builder = "pattern"
 )
 
 func (b *builder) String() string {
