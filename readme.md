@@ -131,7 +131,7 @@ osmium analysis git create
     --analysis-name -a
     --repository-url
     --repository-path
-    --change -c {gpullrequest}
+    --change -c {commit}
     [--change-option -o]
 ```
 | Parameter | Default | Optional | Description |
@@ -163,7 +163,7 @@ osmium analysis git change
     --analysis-name -a
     --repository-url
     --repository-path
-    --change -c {gpullrequest}
+    --change -c {commit}
     [--change-option -o]
 ```
 | Parameter | Default | Optional | Description |
