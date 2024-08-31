@@ -115,7 +115,7 @@ osmium analysis github create
     --analysis-name -a
     --repository-owner
     --repository-name
-    --change -c {gpullrequest}
+    --change -c {pullrequest}
     [--change-option -o]
 ```
 | Parameter | Default | Optional | Description |
@@ -147,7 +147,7 @@ osmium analysis github change
     --analysis-name -a
     --repository-owner
     --repository-name
-    --change -c {gpullrequest}
+    --change -c {pullrequest}
     [--change-option -o]
 ```
 | Parameter | Default | Optional | Description |
