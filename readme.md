@@ -18,10 +18,12 @@ Analysis View in web browser
 
 Analyse [Dapr](https://github.com/dapr/dapr) GitHub repository. Store the generated analysis model to the user home directory under the name "dapr". Be patient - this operation may take several minutes to complete.
 ```
-osmium analysis create \
+osmium analysis github create \
     --analysis-name="dapr" \
-    --source="github:pullrequest" \
-    --source-option="repository-owner=dapr,repository-name=dapr"
+    --repository-owner="dapr" \
+    --repository-name="dapr" \
+    --change="pullrequest" \
+    --change-option="after=0,until=100"
 ```
 
 Generate a view scoped to the "\*.proto" files in the "dapr" directory and the "\*.go" files in the "cmd", "pkg" and "utils" directories. Store the generated view model to the user home directory under the name "dapr".
@@ -81,11 +83,6 @@ Open [http://localhost:3000/view.html](http://localhost:3000/view.html) in a web
 
 ## Concepts
 
-The approach taken in Osmium makes a few assumptions about the the codebase of the analysed software system.
-The first assumption is that the codebase is organized in the traditional way - different source files contain (and therefore correspond to) different elements. Osmium also requires that the changes to the source files are managed using a software configuration management system like Git or GitHub. Such systems keep historical data how the source files were changed and most importantly in what logical units of change. The second assumption is that...
-
-Osmium data model represents the analysed system elements and the dependencies between them in the form of undirected graph of nodes and edges. Osmium data model represents the analysed source files and the dependencies between them in the form of undirected graph of nodes and edges. Each node represents a file. Each edge represents an occuurence of change of two files together in a logical unit of change. Osmium uses Git commits or GitHub pull requests as logical units of change. The edges also track how many occuurences of change they represent - the number of commits or pull requests in which the two files were changes together. This number is used to quantify how strong the dependency is.
-
 - Analysis
 - Modules
 - Spans and Changes
@@ -114,28 +111,68 @@ GITHUB_TOKEN=
 ### Commands to manipulate the DSM analyses
 
 ```
-osmium analysis create
+osmium analysis github create
     --analysis-name -a
-    --source -s {github:pullrequest, git:commit}
-    [--source-option -o]
+    --repository-owner
+    --repository-name
+    --change -c {gpullrequest}
+    [--change-option -o]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
 | --analysis-name -a | | | Name of the analysis. |
-| --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
-| --source-option -o | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
+| --repository-owner | | | Owner of the GitHub repository. |
+| --repository-name | | | Name of the GitHub repository. |
+| --change | -c | | Change of the analysis - pullrequest. |
+| --change-option -o | | Yes | Options of the change. Reserved for future use. |
 
 ```
-osmium analysis change
+osmium analysis git create
     --analysis-name -a
-    --source -s {github:pullrequest, git:commit}
-    [--source-option -o]
+    --repository-url
+    --repository-path
+    --change -c {gpullrequest}
+    [--change-option -o]
 ```
 | Parameter | Default | Optional | Description |
 |--|--|--|--|
 | --analysis-name -a | | | Name of the analysis. |
-| --source -s | github:pullrequest | | Source of the analysis - github:pullrequest or git:commit. |
-| --source-option -o | | Yes | Options of the source. If the source is github:pullrequest - repository-owner and repository-name. If the source is git:commit - repository-url and repository-path. |
+| --repository-url | | | URL of the Git repository. |
+| --repository-path | | | Path of the Git repository. |
+| --change | -c | | Change of the analysis - commit. |
+| --change-option -o | | Yes | Options of the change. Reserved for future use. |
+
+```
+osmium analysis github change
+    --analysis-name -a
+    --repository-owner
+    --repository-name
+    --change -c {gpullrequest}
+    [--change-option -o]
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -a | | | Name of the analysis. |
+| --repository-owner | | | Owner of the GitHub repository. |
+| --repository-name | | | Name of the GitHub repository. |
+| --change | -c | | Change of the analysis - pullrequest. |
+| --change-option -o | | Yes | Options of the change. Reserved for future use. |
+
+```
+osmium analysis git change
+    --analysis-name -a
+    --repository-url
+    --repository-path
+    --change -c {gpullrequest}
+    [--change-option -o]
+```
+| Parameter | Default | Optional | Description |
+|--|--|--|--|
+| --analysis-name -a | | | Name of the analysis. |
+| --repository-url | | | URL of the Git repository. |
+| --repository-path | | | Path of the Git repository. |
+| --change | -c | | Change of the analysis - commit. |
+| --change-option -o | | Yes | Options of the change. Reserved for future use. |
 
 ```
 osmium analysis delete
@@ -149,18 +186,18 @@ osmium analysis delete
 
 Generate an analysis model using the GitHub repository with owner 'scaleforce' and name 'tixets' as a source. Store the generated analysis model to the user home directory under the name "ticketing_tixets".
 ```
-osmium analysis create \
+osmium analysis github create \
     --analysis-name="ticketing_tixets" \
-    --source="github:pullrequest" \
-    --source-option="repository-owner=scaleforce,repository-name=tixets"
+    --repository-owner="scaleforce" \
+    --repository-name="tixets"
 ```
 
 Alter the stored analysis model with name "ticketing_tixets". Use the same GitHub repository with owner "scaleforce" and name "tixets" as a source.
 ```
-osmium analysis change \
+osmium analysis github change \
     --analysis-name="ticketing_tixets" \
-    --source="github:pullrequest" \
-    --ßsource-option="repository-owner=scaleforce,repository-name=tixets"
+    --repository-owner="scaleforce" \
+    --repository-name="tixets"
 ```
 
 Remove the stored analysis model with name "ticketing_tixets" from the user home directory.
