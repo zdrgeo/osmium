@@ -108,7 +108,7 @@ func renderViewToTerminal(view *AnalysisView, spanName string, xNodeStart, yNode
 
 	writer := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
 
-	fmt.Fprintf(writer, "\tY Nodes (%d - %d)\t\tX Nodes (%d - %d)\n", yNodeStart, yNodeStart+nodeCount, xNodeStart, xNodeStart+nodeCount)
+	fmt.Fprintf(writer, "\tY Nodes (%d - %d)\t\tX Nodes (%d - %d)\n", yNodeStart, yNodeStart+nodeCount-1, xNodeStart, xNodeStart+nodeCount-1)
 
 	for nodeIndex := range nodeCount {
 		fmt.Fprintf(writer, "%2d\t(%d) %s\t%2d\t(%d) %s\n", nodeIndex, yNodeStart+nodeIndex, yNodeNames[nodeIndex], nodeIndex, xNodeStart+nodeIndex, xNodeNames[nodeIndex])
