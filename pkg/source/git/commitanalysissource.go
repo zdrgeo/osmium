@@ -29,13 +29,13 @@ func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) 
 	// repository, err := git.Open(memory.NewStorage(), nil)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	reference, err := repository.Head()
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	// Can be used later
@@ -47,7 +47,7 @@ func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) 
 	commitIter, err := repository.Log(logOptions)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	modules := map[string]*analysis.Module{}
@@ -116,7 +116,7 @@ func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) 
 	})
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	span := &analysis.Span{Changes: changes, Nodes: nodes}

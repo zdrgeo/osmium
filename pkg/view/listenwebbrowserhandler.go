@@ -26,7 +26,7 @@ func (handler *ListenWebBrowserHandler) ListenWebBrowser(analysisName, viewName,
 		userHomePath, err := os.UserHomeDir()
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		basePath = userHomePath
@@ -35,7 +35,7 @@ func (handler *ListenWebBrowserHandler) ListenWebBrowser(analysisName, viewName,
 	viewPath := viewPath(basePath, analysisName, viewName)
 
 	if err := os.MkdirAll(viewPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	fileHandler := http.FileServer(http.Dir(viewPath))
@@ -52,7 +52,7 @@ func (handler *ListenWebBrowserHandler) ListenWebBrowser(analysisName, viewName,
 	log.Printf("Listening on %s\n", address)
 
 	if err := http.ListenAndServe(address, nil); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
 
@@ -68,7 +68,7 @@ func (handler *fileChangeHandler) Handle(writer http.ResponseWriter, request *ht
 	connection, err := websocket.Accept(writer, request, nil)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	defer connection.CloseNow()
@@ -82,7 +82,7 @@ func (handler *fileChangeHandler) Handle(writer http.ResponseWriter, request *ht
 	oldStat, err := os.Stat(handler.fileName)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	ticker := time.NewTicker(5 * time.Second)
@@ -95,21 +95,21 @@ func (handler *fileChangeHandler) Handle(writer http.ResponseWriter, request *ht
 			err = connection.Close(websocket.StatusNormalClosure, "")
 
 			if err != nil && websocket.CloseStatus(err) != websocket.StatusNormalClosure && websocket.CloseStatus(err) != websocket.StatusGoingAway {
-				log.Fatal(err)
+				log.Panic(err)
 			}
 			return
 		case <-ticker.C:
 			newStat, err := os.Stat(handler.fileName)
 
 			if err != nil {
-				log.Fatal(err)
+				log.Panic(err)
 			}
 
 			if oldStat.ModTime() != newStat.ModTime() {
 				err := connection.Close(websocket.StatusNormalClosure, "changed")
 
 				if err != nil && websocket.CloseStatus(err) != websocket.StatusNormalClosure && websocket.CloseStatus(err) != websocket.StatusGoingAway {
-					log.Fatal(err)
+					log.Panic(err)
 				}
 
 				return
@@ -125,7 +125,7 @@ go func() {
 	log.Printf("Listening on %s\n", address)
 
 	if err := http.ListenAndServe(address, nil); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	done <- struct{}{}
@@ -143,7 +143,7 @@ case "linux":
 }
 
 if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 }
 
 <-done

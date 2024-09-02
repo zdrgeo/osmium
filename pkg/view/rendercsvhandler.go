@@ -25,7 +25,7 @@ func (handler *RenderCSVHandler) RenderCSV(analysisName, viewName, spanName stri
 		userHomePath, err := os.UserHomeDir()
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		basePath = userHomePath
@@ -34,7 +34,7 @@ func (handler *RenderCSVHandler) RenderCSV(analysisName, viewName, spanName stri
 	viewPath := viewPath(basePath, analysisName, viewName)
 
 	if err := os.MkdirAll(viewPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	fileName := filepath.Join(viewPath, "view.csv")
@@ -46,7 +46,7 @@ func renderViewToCSVFile(view *AnalysisView, spanName, fileName string) {
 	file, err := os.Create(fileName)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	defer file.Close()

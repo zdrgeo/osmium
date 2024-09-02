@@ -23,7 +23,7 @@ func (source *PullRequestAnalysisSource) Query(repositoryOwner, repositoryName s
 	pullRequests, err := source.getPullRequests(repositoryOwner, repositoryName)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	modules := map[string]*analysis.Module{}
@@ -40,7 +40,7 @@ func (source *PullRequestAnalysisSource) Query(repositoryOwner, repositoryName s
 			files, err = source.getFiles(pullRequest.ID)
 
 			if err != nil {
-				log.Fatal(err)
+				log.Panic(err)
 			}
 		}
 

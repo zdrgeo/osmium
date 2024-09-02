@@ -18,7 +18,7 @@ func NewFileViewRepository(basePath string) *FileViewRepository {
 		userHomePath, err := os.UserHomeDir()
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		basePath = userHomePath
@@ -35,19 +35,19 @@ func (repository *FileViewRepository) Add(analysisName, name string, view *view.
 	viewPath := viewPath(repository.basePath, analysisName, name)
 
 	if err := os.MkdirAll(viewPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	data, err := json.MarshalIndent(view, "", "  ")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	err = os.WriteFile(filepath.Join(viewPath, "view.json"), data, 0660)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
 
@@ -55,19 +55,19 @@ func (repository *FileViewRepository) Set(analysisName, name string, view *view.
 	viewPath := viewPath(repository.basePath, analysisName, name)
 
 	if err := os.MkdirAll(viewPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	data, err := json.MarshalIndent(view, "", "  ")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	err = os.WriteFile(filepath.Join(viewPath, "view.json"), data, 0660)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
 
@@ -77,7 +77,7 @@ func (repository *FileViewRepository) Remove(analysisName, name string) {
 	err := os.RemoveAll(viewPath)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
 
@@ -91,7 +91,7 @@ func (repository *FileViewRepository) Get(analysisName, name string) *view.Analy
 			return nil
 		}
 
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	view := &view.AnalysisView{}
@@ -99,7 +99,7 @@ func (repository *FileViewRepository) Get(analysisName, name string) *view.Analy
 	err = json.Unmarshal(data, view)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	return view

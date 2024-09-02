@@ -18,7 +18,7 @@ func NewFileAnalysisRepository(basePath string) *FileAnalysisRepository {
 		userHomePath, err := os.UserHomeDir()
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		basePath = userHomePath
@@ -35,19 +35,19 @@ func (repository *FileAnalysisRepository) Add(name string, analysis *analysis.An
 	analysisPath := analysisPath(repository.basePath, name)
 
 	if err := os.MkdirAll(analysisPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	data, err := json.MarshalIndent(analysis, "", "  ")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	err = os.WriteFile(filepath.Join(analysisPath, "analysis.json"), data, 0660)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
 
@@ -55,19 +55,19 @@ func (repository *FileAnalysisRepository) Set(name string, analysis *analysis.An
 	analysisPath := analysisPath(repository.basePath, name)
 
 	if err := os.MkdirAll(analysisPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	data, err := json.MarshalIndent(analysis, "", "  ")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	err = os.WriteFile(filepath.Join(analysisPath, "analysis.json"), data, 0660)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
 
@@ -77,7 +77,7 @@ func (repository *FileAnalysisRepository) Remove(name string) {
 	err := os.RemoveAll(analysisPath)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
 
@@ -91,7 +91,7 @@ func (repository *FileAnalysisRepository) Get(name string) *analysis.Analysis {
 			return nil
 		}
 
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	analysis := &analysis.Analysis{}
@@ -99,7 +99,7 @@ func (repository *FileAnalysisRepository) Get(name string) *analysis.Analysis {
 	err = json.Unmarshal(data, analysis)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	return analysis

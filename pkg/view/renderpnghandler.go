@@ -29,7 +29,7 @@ func (handler *RenderPNGHandler) RenderPNG(analysisName, viewName, spanName stri
 		userHomePath, err := os.UserHomeDir()
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		basePath = userHomePath
@@ -38,7 +38,7 @@ func (handler *RenderPNGHandler) RenderPNG(analysisName, viewName, spanName stri
 	viewPath := viewPath(basePath, analysisName, viewName)
 
 	if err := os.MkdirAll(viewPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	fileName := filepath.Join(viewPath, "view.png")

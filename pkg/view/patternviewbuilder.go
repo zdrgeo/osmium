@@ -31,7 +31,7 @@ func (builder *PatternViewBuilder) Build(analysis *analysis.Analysis) *AnalysisV
 		compiledPatterns, err := compilePatterns(builder.nodeNames)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		for _, span := range analysis.Spans {
@@ -97,7 +97,7 @@ func matchPattern(patterns []string, text string) bool {
 		match, err := regexp.MatchString(pattern, text)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		if match {

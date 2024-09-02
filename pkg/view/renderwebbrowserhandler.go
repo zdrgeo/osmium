@@ -25,7 +25,7 @@ func (handler *RenderWebBrowserHandler) RenderWebBrowser(analysisName, viewName,
 		userHomePath, err := os.UserHomeDir()
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		basePath = userHomePath
@@ -34,7 +34,7 @@ func (handler *RenderWebBrowserHandler) RenderWebBrowser(analysisName, viewName,
 	viewPath := viewPath(basePath, analysisName, viewName)
 
 	if err := os.MkdirAll(viewPath, 0750); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	fileName := filepath.Join(viewPath, "view.html")
@@ -46,7 +46,7 @@ func renderViewToHTMLFile(view *AnalysisView, spanName, templateFileName, fileNa
 	file, err := os.Create(fileName)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	defer file.Close()
@@ -62,12 +62,12 @@ func renderViewToHTMLFile(view *AnalysisView, spanName, templateFileName, fileNa
 	template, err := template.New(filepath.Base(templateFileName)).ParseFiles(templateFileName)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	err = template.Execute(file, view)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }

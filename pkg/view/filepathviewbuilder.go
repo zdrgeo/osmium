@@ -81,7 +81,7 @@ func matchFilePath(filePaths []string, fileName string) bool {
 		match, err := path.Match(filePath, fileName)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		if match {

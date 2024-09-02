@@ -22,7 +22,7 @@ func main() {
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	// client, err := api.DefaultGraphQLClient()
@@ -30,7 +30,7 @@ func main() {
 	client, err := api.NewGraphQLClient(options)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	gitAnalysisSource := git.NewCommitAnalysisSource()
@@ -94,6 +94,6 @@ func main() {
 	osmiumCommand := command.NewOsmiumCommand(analysisCommand, viewCommand)
 
 	if err := osmiumCommand.Execute(); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
