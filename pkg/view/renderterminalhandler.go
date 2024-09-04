@@ -83,10 +83,10 @@ func renderViewToTerminal(view *AnalysisView, spanName string, xNodeStart, yNode
 		fmt.Printf("%2d ", yNodeIndex)
 		for xNodeIndex := range xNodeNames {
 			if xNodeStart+xNodeIndex != yNodeStart+yNodeIndex {
-				fmt.Printf("\033[38;5;%dm%2d\033[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex]), spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
+				fmt.Printf("\x1B[38;5;%dm%2d\x1B[0m ", valueColor(spanView.MinValue, spanView.MaxValue, spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex]), spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
 			} else {
 				// fmt.Printf("%2d ", spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
-				// fmt.Printf("\033[7m%2d\033[0m ", spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
+				// fmt.Printf("\x1B[7m%2d\x1B[0m ", spanView.Values[yNodeStart+yNodeIndex][xNodeStart+xNodeIndex])
 				fmt.Print("▒▒ ")
 			}
 		}
