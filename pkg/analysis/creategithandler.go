@@ -1,6 +1,8 @@
 package analysis
 
-import "log"
+import (
+	"log"
+)
 
 type CreateGitHandler struct {
 	source     GitAnalysisSource

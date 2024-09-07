@@ -33,8 +33,8 @@ func main() {
 		log.Panic(err)
 	}
 
-	gitAnalysisSource := git.NewCommitAnalysisSource()
-	gitHubAnalysisSource := github.NewPullRequestAnalysisSource(client)
+	gitAnalysisSource := git.NewCommitAnalysisSource(analysis.RenderGitAnalysisProgress)
+	gitHubAnalysisSource := github.NewPullRequestAnalysisSource(client, analysis.RenderGitHubAnalysisProgress)
 
 	analysisRepository := repository.NewFileAnalysisRepository(viper.GetString("BASEPATH")) // Empty means user home
 	viewRepository := repository.NewFileViewRepository(viper.GetString("BASEPATH"))         // Empty means user home

@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/zdrgeo/osmium/pkg/analysis"
@@ -12,11 +13,15 @@ import (
 )
 
 type PullRequestAnalysisSource struct {
-	client *api.GraphQLClient
+	client       *api.GraphQLClient
+	progressFunc analysis.GitHubAnalysisProgressFunc
 }
 
-func NewPullRequestAnalysisSource(client *api.GraphQLClient) *PullRequestAnalysisSource {
-	return &PullRequestAnalysisSource{client: client}
+func NewPullRequestAnalysisSource(client *api.GraphQLClient, progressFunc analysis.GitHubAnalysisProgressFunc) *PullRequestAnalysisSource {
+	return &PullRequestAnalysisSource{
+		client:       client,
+		progressFunc: progressFunc,
+	}
 }
 
 func (source *PullRequestAnalysisSource) Query(repositoryOwner, repositoryName string) (*analysis.Analysis, error) {
@@ -32,25 +37,13 @@ func (source *PullRequestAnalysisSource) Query(repositoryOwner, repositoryName s
 	nodes := map[string]*analysis.Node{}
 
 	for _, pullRequest := range pullRequests {
-		var files []pullRequestChangedFile
-
-		if !pullRequest.Files.PageInfo.HasNextPage {
-			files = pullRequest.Files.Nodes
-		} else {
-			files, err = source.getFiles(pullRequest.ID)
-
-			if err != nil {
-				log.Panic(err)
-			}
-		}
-
 		changeName := fmt.Sprint(pullRequest.Number)
 
 		changes[changeName] = &analysis.Change{Name: changeName}
 
-		for _, nodeFile := range files {
+		for _, nodeFile := range pullRequest.Files.Nodes {
 			if node, ok := nodes[nodeFile.Path]; ok {
-				for _, edgeFile := range files {
+				for _, edgeFile := range pullRequest.Files.Nodes {
 					if edge, ok := node.Edges[edgeFile.Path]; ok {
 						edge.ChangeNames = append(edge.ChangeNames, changeName)
 					} else {
@@ -60,7 +53,7 @@ func (source *PullRequestAnalysisSource) Query(repositoryOwner, repositoryName s
 			} else {
 				edges := map[string]*analysis.Edge{}
 
-				for _, edgeFile := range files {
+				for _, edgeFile := range pullRequest.Files.Nodes {
 					edges[edgeFile.Path] = &analysis.Edge{ChangeNames: []string{changeName}}
 				}
 
@@ -140,12 +133,50 @@ func (source *PullRequestAnalysisSource) getPullRequests(repositoryOwner, reposi
 
 	pullRequests := []pullRequest{}
 
+	if source.progressFunc != nil {
+		progress := &analysis.GitHubAnalysisProgress{
+			PullRequestCount:      0,
+			PullRequestTotalCount: 0,
+		}
+
+		source.progressFunc(progress)
+	}
+
+	wg := sync.WaitGroup{}
+
 	for {
 		if err := source.client.Query("", &query, variables); err != nil {
 			return nil, err
 		}
 
+		for _, pullRequest := range query.Repository.PullRequests.Nodes {
+			if pullRequest.Files.PageInfo.HasNextPage {
+				wg.Add(1)
+
+				go func(pullRequestFiles *files, pullRequestID string) {
+					defer wg.Done()
+
+					files, err := source.getFiles(pullRequestID)
+
+					if err != nil {
+						return
+					}
+
+					pullRequestFiles.Nodes = files
+				}(&pullRequest.Files, pullRequest.ID)
+			}
+		}
+
 		pullRequests = append(pullRequests, query.Repository.PullRequests.Nodes...)
+
+		if source.progressFunc != nil {
+			progress := &analysis.GitHubAnalysisProgress{
+				PullRequestCount:      len(pullRequests),
+				PullRequestTotalCount: query.Repository.PullRequests.TotalCount,
+			}
+
+			source.progressFunc(progress)
+		}
 
 		if !query.Repository.PullRequests.PageInfo.HasNextPage {
 			break
@@ -153,6 +184,8 @@ func (source *PullRequestAnalysisSource) getPullRequests(repositoryOwner, reposi
 
 		variables["pullRequestsCursor"] = graphql.String(query.Repository.PullRequests.PageInfo.EndCursor)
 	}
+
+	wg.Wait()
 
 	return pullRequests, nil
 }

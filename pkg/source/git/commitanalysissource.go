@@ -11,10 +11,14 @@ import (
 	"github.com/zdrgeo/osmium/pkg/analysis"
 )
 
-type CommitAnalysisSource struct{}
+type CommitAnalysisSource struct {
+	progressFunc analysis.GitAnalysisProgressFunc
+}
 
-func NewCommitAnalysisSource() *CommitAnalysisSource {
-	return &CommitAnalysisSource{}
+func NewCommitAnalysisSource(progressFunc analysis.GitAnalysisProgressFunc) *CommitAnalysisSource {
+	return &CommitAnalysisSource{
+		progressFunc: progressFunc,
+	}
 }
 
 func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) (*analysis.Analysis, error) {

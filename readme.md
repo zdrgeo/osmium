@@ -17,7 +17,7 @@ Analysis View in web browser
 ## Quick start
 
 Analyse [Dapr](https://github.com/dapr/dapr) GitHub repository. Store the generated analysis model to the user home directory under the name "dapr". Be patient - this operation may take several minutes to complete.
-```
+```shell
 osmium analysis github create \
     --analysis-name="dapr" \
     --repository-owner="dapr" \
@@ -27,7 +27,7 @@ osmium analysis github create \
 ```
 
 Generate a view scoped to the "\*.proto" files in the "dapr" directory and the "\*.go" files in the "cmd", "pkg" and "utils" directories. Store the generated view model to the user home directory under the name "dapr".
-```
+```shell
 osmium view create \
     --analysis-name="dapr" \
     --view-name="dapr" \
@@ -39,7 +39,7 @@ osmium view create \
 ```
 
 Render to the terminal a "window" of the first 30 files of the view.
-```
+```shell
 osmium view terminal render \
     --analysis-name="dapr" \
     --view-name="dapr" \
@@ -48,7 +48,7 @@ osmium view terminal render \
 ![Quick Start Analysis View in Terminal (Start: 0, Count: 30)](./quick_start_analysis_view_terminal_0_30.png)
 
 Render to the terminal a "window" of 30 files of the view offseted 10 files to the right on the X axis. This allows for "scrolling" of the view, which often contains more files than can be displayed at once in the terminal.
-```
+```shell
 osmium view terminal render \
     --analysis-name="dapr" \
     --view-name="dapr" \
@@ -58,7 +58,7 @@ osmium view terminal render \
 ![Quick Start Analysis View in Terminal (Start: 10, Count: 30)](./quick_start_analysis_view_terminal_10_30.png)
 
 Generate another view scoped only to the "\*.proto" files in the "dapr" directory. Store the generated view model to the user home directory under the name "api".
-```
+```shell
 osmium view create \
     --analysis-name="dapr" \
     --view-name="api" \
@@ -67,7 +67,7 @@ osmium view create \
 ```
 
 Render to an HTML file the whole view and start listening for HTTP requests.
-```
+```shell
 osmium view web-browser render \
     --analysis-name="dapr" \
     --view-name="api"
@@ -100,7 +100,7 @@ The output of each stage is persisted and can be used mutiple times as input for
 
 ### Configuration
 
-```
+```dotenv
 # config.env
 
 BASEPATH=
