@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/zdrgeo/osmium/pkg/view"
 )
 
@@ -54,6 +55,8 @@ func NewRenderTerminalCommand(handler *view.RenderTerminalHandler) *cobra.Comman
 	}
 
 	command.Flags().StringP("span-name", "s", "", "Name of the span")
+	viper.BindPFlag("spanname", command.PersistentFlags().Lookup("span-name"))
+
 	command.Flags().Int("x-node-start", 0, "Start of the X nodes")
 	command.Flags().Int("y-node-start", 0, "Start of the Y nodes")
 	command.Flags().Int("node-count", 100, "Count of the nodes")

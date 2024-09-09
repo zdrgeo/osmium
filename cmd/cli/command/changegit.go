@@ -20,6 +20,12 @@ func NewChangeGitCommand(handler *analysis.ChangeGitHandler) *cobra.Command {
 				fmt.Printf("Error retrieving Git analysis name: %s\n", err.Error())
 			}
 
+			spanSize, err := cmd.Flags().GetInt("span-size")
+
+			if err != nil {
+				fmt.Printf("Error retrieving span size: %s\n", err.Error())
+			}
+
 			repositoryURL, err := cmd.Flags().GetString("repository-url")
 
 			if err != nil {
@@ -32,7 +38,7 @@ func NewChangeGitCommand(handler *analysis.ChangeGitHandler) *cobra.Command {
 				fmt.Printf("Error retrieving Git repository path: %s\n", err.Error())
 			}
 
-			handler.ChangeGit(analysisName, repositoryURL, repositoryPath)
+			handler.ChangeGit(analysisName, spanSize, repositoryURL, repositoryPath)
 		},
 	}
 

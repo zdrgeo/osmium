@@ -51,7 +51,7 @@ func NewChangeViewCommand(handler *view.ChangeViewHandler) *cobra.Command {
 	command.Flags().StringArrayP("node-name", "n", []string{}, "Names of the nodes")
 	viper.BindPFlag("nodenames", command.Flags().Lookup("node-name"))
 
-	command.Flags().StringP("builder", "b", "", "Builder of the view")
+	command.Flags().StringP("builder", "b", "filepath", "Builder of the view")
 	// command.Flags().VarP(&builder, "builder", "b", "Builder of the view")
 	command.MarkFlagRequired("builder")
 	viper.BindPFlag("builder", command.Flags().Lookup("builder"))

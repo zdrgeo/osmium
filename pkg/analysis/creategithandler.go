@@ -13,8 +13,8 @@ func NewCreateGitHandler(source GitAnalysisSource, repository AnalysisRepository
 	return &CreateGitHandler{source: source, repository: repository}
 }
 
-func (handler *CreateGitHandler) CreateGit(name, repositoryURL, repositoryPath string) {
-	analysis, err := handler.source.Query(repositoryURL, repositoryPath)
+func (handler *CreateGitHandler) CreateGit(name string, spanSize int, repositoryURL, repositoryPath string) {
+	analysis, err := handler.source.Query(spanSize, repositoryURL, repositoryPath)
 
 	if err != nil {
 		log.Print(err)

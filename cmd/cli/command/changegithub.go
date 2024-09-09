@@ -20,6 +20,12 @@ func NewChangeGitHubCommand(handler *analysis.ChangeGitHubHandler) *cobra.Comman
 				fmt.Printf("Error retrieving analysis name: %s\n", err.Error())
 			}
 
+			spanSize, err := cmd.Flags().GetInt("span-size")
+
+			if err != nil {
+				fmt.Printf("Error retrieving span size: %s\n", err.Error())
+			}
+
 			repositoryOwner, err := cmd.Flags().GetString("repository-owner")
 
 			if err != nil {
@@ -32,7 +38,7 @@ func NewChangeGitHubCommand(handler *analysis.ChangeGitHubHandler) *cobra.Comman
 				fmt.Printf("Error retrieving GitHub repository name: %s\n", err.Error())
 			}
 
-			handler.ChangeGitHub(analysisName, repositoryOwner, repositoryName)
+			handler.ChangeGitHub(analysisName, spanSize, repositoryOwner, repositoryName)
 		},
 	}
 

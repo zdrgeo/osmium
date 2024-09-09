@@ -19,7 +19,7 @@ func NewCommitAnalysisSource(progressFunc analysis.GitAnalysisProgressFunc) *Com
 	}
 }
 
-func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) (*analysis.Analysis, error) {
+func (source *CommitAnalysisSource) Query(spanSize int, repositoryURL, repositoryPath string) (*analysis.Analysis, error) {
 	// cloneOptions := &git.CloneOptions{
 	// 	URL:      repositoryURL,
 	// 	Progress: os.Stdout,

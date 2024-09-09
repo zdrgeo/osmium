@@ -11,8 +11,8 @@ func NewChangeGitHubHandler(source GitHubAnalysisSource, repository AnalysisRepo
 	return &ChangeGitHubHandler{source: source, repository: repository}
 }
 
-func (handler *ChangeGitHubHandler) ChangeGitHub(name, repositoryOwner, repositoryName string) {
-	analysis, err := handler.source.Query(repositoryOwner, repositoryName)
+func (handler *ChangeGitHubHandler) ChangeGitHub(name string, spanSize int, repositoryOwner, repositoryName string) {
+	analysis, err := handler.source.Query(spanSize, repositoryOwner, repositoryName)
 
 	if err != nil {
 		log.Print(err)

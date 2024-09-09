@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/zdrgeo/osmium/pkg/view"
 )
 
@@ -36,6 +37,7 @@ func NewRenderWebBrowserCommand(handler *view.RenderWebBrowserHandler) *cobra.Co
 	}
 
 	command.Flags().StringP("span-name", "s", "", "Name of the span")
+	viper.BindPFlag("spanname", command.PersistentFlags().Lookup("span-name"))
 
 	return command
 }

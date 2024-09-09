@@ -24,7 +24,7 @@ func NewPullRequestAnalysisSource(client *api.GraphQLClient, progressFunc analys
 	}
 }
 
-func (source *PullRequestAnalysisSource) Query(repositoryOwner, repositoryName string) (*analysis.Analysis, error) {
+func (source *PullRequestAnalysisSource) Query(spanSize int, repositoryOwner, repositoryName string) (*analysis.Analysis, error) {
 	pullRequests, err := source.getPullRequests(repositoryOwner, repositoryName)
 
 	if err != nil {

@@ -13,8 +13,8 @@ func NewCreateGitHubHandler(source GitHubAnalysisSource, repository AnalysisRepo
 	return &CreateGitHubHandler{source: source, repository: repository}
 }
 
-func (handler *CreateGitHubHandler) CreateGitHub(name, repositoryOwner, repositoryName string) {
-	analysis, err := handler.source.Query(repositoryOwner, repositoryName)
+func (handler *CreateGitHubHandler) CreateGitHub(name string, spanSize int, repositoryOwner, repositoryName string) {
+	analysis, err := handler.source.Query(spanSize, repositoryOwner, repositoryName)
 
 	if err != nil {
 		log.Print(err)

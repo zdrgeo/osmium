@@ -3,7 +3,7 @@ package analysis
 import "fmt"
 
 type GitAnalysisSource interface {
-	Query(repositoryURL, repositoryPath string) (*Analysis, error)
+	Query(spanSize int, repositoryURL, repositoryPath string) (*Analysis, error)
 }
 
 type GitAnalysisProgress struct {
