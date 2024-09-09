@@ -3,8 +3,6 @@ package git
 import (
 	"fmt"
 	"log"
-	"os"
-	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -22,13 +20,13 @@ func NewCommitAnalysisSource(progressFunc analysis.GitAnalysisProgressFunc) *Com
 }
 
 func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) (*analysis.Analysis, error) {
-	cloneOptions := &git.CloneOptions{
-		URL:      repositoryURL,
-		Progress: os.Stdout,
-	}
+	// cloneOptions := &git.CloneOptions{
+	// 	URL:      repositoryURL,
+	// 	Progress: os.Stdout,
+	// }
 
-	repository, err := git.PlainClone(repositoryPath, false, cloneOptions)
-	// repository, err := git.PlainOpen(repositoryPath)
+	// repository, err := git.PlainClone(repositoryPath, false, cloneOptions)
+	repository, err := git.PlainOpen(repositoryPath)
 	// repository, err := git.Clone(memory.NewStorage(), nil, cloneOptions)
 	// repository, err := git.Open(memory.NewStorage(), nil)
 
@@ -42,11 +40,10 @@ func (source *CommitAnalysisSource) Query(repositoryURL, repositoryPath string) 
 		log.Panic(err)
 	}
 
-	// Can be used later
-	since := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
-	until := time.Date(2200, 1, 1, 0, 0, 0, 0, time.UTC)
-	//
-	logOptions := &git.LogOptions{From: reference.Hash(), Since: &since, Until: &until}
+	// since := time.Date(1800, 1, 1, 0, 0, 0, 0, time.UTC)
+	// until := time.Date(2200, 1, 1, 0, 0, 0, 0, time.UTC)
+
+	logOptions := &git.LogOptions{From: reference.Hash() /* , Order=LogOrderCommitterTime, Since: &since, Until: &until */}
 
 	commitIter, err := repository.Log(logOptions)
 
