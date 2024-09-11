@@ -50,7 +50,7 @@ func (builder *FilePathViewBuilder) Build(analysis *analysis.Analysis) *Analysis
 			for edgeNodeIndex, edgeNodeName := range nodeNames {
 				value := 0
 
-				if edge, ok := analysis.Spans[""].Nodes[nodeName].Edges[edgeNodeName]; ok {
+				if edge, ok := span.Nodes[nodeName].Edges[edgeNodeName]; ok {
 					value = len(edge.ChangeNames)
 				}
 
