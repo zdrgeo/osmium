@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -54,7 +55,7 @@ func NewRenderTerminalCommand(handler *view.RenderTerminalHandler) *cobra.Comman
 		},
 	}
 
-	command.Flags().StringP("span-name", "s", "", "Name of the span")
+	command.Flags().StringP("span-name", "s", strconv.Itoa(0), "Name of the span")
 	viper.BindPFlag("spanname", command.PersistentFlags().Lookup("span-name"))
 
 	command.Flags().Int("x-node-start", 0, "Start of the X nodes")
