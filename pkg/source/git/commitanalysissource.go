@@ -3,6 +3,7 @@ package git
 import (
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -51,15 +52,16 @@ func (source *CommitAnalysisSource) Query(spanSize int, repositoryURL, repositor
 		log.Panic(err)
 	}
 
-	modules := map[string]*analysis.Module{}
 	spans := map[string]*analysis.Span{}
-	changes := map[string]*analysis.Change{}
-	nodes := map[string]*analysis.Node{}
+
+	span := &analysis.Span{Name: strconv.Itoa(0), Size: spanSize, Changes: map[string]*analysis.Change{}, Nodes: map[string]*analysis.Node{}}
+
+	spans[span.Name] = span
+
+	commitIndex := 0
 
 	err = commitIter.ForEach(func(commit *object.Commit) error {
-		changeName := fmt.Sprint(commit.Hash)
-
-		changes[changeName] = &analysis.Change{Name: changeName}
+		changeName := fmt.Sprint(commit.Message)
 
 		nodeFileIter, err := commit.Files()
 
@@ -68,7 +70,7 @@ func (source *CommitAnalysisSource) Query(spanSize int, repositoryURL, repositor
 		}
 
 		err = nodeFileIter.ForEach(func(nodeFile *object.File) error {
-			if node, ok := nodes[nodeFile.Name]; ok {
+			if node, ok := span.Nodes[nodeFile.Name]; ok {
 				edgeFileIter, err := commit.Files()
 
 				if err != nil {
@@ -107,11 +109,19 @@ func (source *CommitAnalysisSource) Query(spanSize int, repositoryURL, repositor
 					return err
 				}
 
-				nodes[nodeFile.Name] = &analysis.Node{Edges: edges}
+				span.Nodes[nodeFile.Name] = &analysis.Node{Edges: edges}
 			}
 
 			return nil
 		})
+
+		if commitIndex%spanSize == 0 {
+			span = &analysis.Span{Name: strconv.Itoa(commitIndex), Size: spanSize, Changes: map[string]*analysis.Change{}, Nodes: map[string]*analysis.Node{}}
+
+			spans[span.Name] = span
+		}
+
+		commitIndex++
 
 		return nil
 	})
@@ -120,9 +130,5 @@ func (source *CommitAnalysisSource) Query(spanSize int, repositoryURL, repositor
 		log.Panic(err)
 	}
 
-	span := &analysis.Span{Changes: changes, Nodes: nodes}
-
-	spans[span.Name] = span
-
-	return &analysis.Analysis{Modules: modules, Spans: spans}, nil
+	return &analysis.Analysis{Modules: map[string]*analysis.Module{}, Spans: spans}, nil
 }

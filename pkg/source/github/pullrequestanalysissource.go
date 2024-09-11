@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"sync"
 	"time"
 
@@ -31,18 +32,19 @@ func (source *PullRequestAnalysisSource) Query(spanSize int, repositoryOwner, re
 		log.Panic(err)
 	}
 
-	modules := map[string]*analysis.Module{}
 	spans := map[string]*analysis.Span{}
-	changes := map[string]*analysis.Change{}
-	nodes := map[string]*analysis.Node{}
 
-	for _, pullRequest := range pullRequests {
+	span := &analysis.Span{Name: strconv.Itoa(0), Size: spanSize, Changes: map[string]*analysis.Change{}, Nodes: map[string]*analysis.Node{}}
+
+	spans[span.Name] = span
+
+	for pullRequestIndex, pullRequest := range pullRequests {
 		changeName := fmt.Sprint(pullRequest.Number)
 
-		changes[changeName] = &analysis.Change{Name: changeName}
+		span.Changes[changeName] = &analysis.Change{Name: changeName}
 
 		for _, nodeFile := range pullRequest.Files.Nodes {
-			if node, ok := nodes[nodeFile.Path]; ok {
+			if node, ok := span.Nodes[nodeFile.Path]; ok {
 				for _, edgeFile := range pullRequest.Files.Nodes {
 					if edge, ok := node.Edges[edgeFile.Path]; ok {
 						edge.ChangeNames = append(edge.ChangeNames, changeName)
@@ -57,16 +59,18 @@ func (source *PullRequestAnalysisSource) Query(spanSize int, repositoryOwner, re
 					edges[edgeFile.Path] = &analysis.Edge{ChangeNames: []string{changeName}}
 				}
 
-				nodes[nodeFile.Path] = &analysis.Node{Edges: edges}
+				span.Nodes[nodeFile.Path] = &analysis.Node{Edges: edges}
 			}
+		}
+
+		if pullRequestIndex%spanSize == 0 {
+			span = &analysis.Span{Name: strconv.Itoa(pullRequestIndex), Size: spanSize, Changes: map[string]*analysis.Change{}, Nodes: map[string]*analysis.Node{}}
+
+			spans[span.Name] = span
 		}
 	}
 
-	span := &analysis.Span{Changes: changes, Nodes: nodes}
-
-	spans[span.Name] = span
-
-	return &analysis.Analysis{Modules: modules, Spans: spans}, nil
+	return &analysis.Analysis{Modules: map[string]*analysis.Module{}, Spans: spans}, nil
 }
 
 type (
