@@ -115,7 +115,7 @@ func (source *CommitAnalysisSource) Query(spanSize int, repositoryURL, repositor
 			return nil
 		})
 
-		if commitIndex%spanSize == 0 {
+		if spanSize != 0 && commitIndex%spanSize == 0 {
 			span = &analysis.Span{Name: strconv.Itoa(commitIndex), Size: spanSize, Changes: map[string]*analysis.Change{}, Nodes: map[string]*analysis.Node{}}
 
 			spans[span.Name] = span

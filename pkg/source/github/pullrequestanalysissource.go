@@ -63,7 +63,7 @@ func (source *PullRequestAnalysisSource) Query(spanSize int, repositoryOwner, re
 			}
 		}
 
-		if pullRequestIndex%spanSize == 0 {
+		if spanSize != 0 && pullRequestIndex%spanSize == 0 {
 			span = &analysis.Span{Name: strconv.Itoa(pullRequestIndex), Size: spanSize, Changes: map[string]*analysis.Change{}, Nodes: map[string]*analysis.Node{}}
 
 			spans[span.Name] = span
