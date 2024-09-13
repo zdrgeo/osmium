@@ -45,3 +45,13 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+brews:
+  - name: osmium
+    homepage: https://github.com/zdrgeo/osmium
+    repository:
+      owner: zdrgeo
+      name: homebrew-osmium
+    commit_author:
+      name: zdrgeo
+      email: zdravko.georgiev@gmail.com
